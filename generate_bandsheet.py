@@ -67,7 +67,7 @@ def get_calendar_events(access_token):
 
     # Get events from today onwards for the next 6 months
     today = datetime.now(PT_TZ).date()
-    time_min = datetime.combine(today, datetime.min.time()).isoformat()
+    time_min = datetime.combine(today, datetime.min.time(), tzinfo=PT_TZ).isoformat()
     time_max = (datetime.now(PT_TZ) + timedelta(days=180)).isoformat()
 
     url = "https://www.googleapis.com/calendar/v3/calendars/neonblondevc@gmail.com/events"
@@ -204,7 +204,8 @@ def generate_bandsheet(gigs, member_outs):
     # FULLY FREE WEEKENDS
     free_weekends = []
     check_date = today
-    for _ in range(26):  # Check next 26 weeks
+    end_of_july = today.replace(month=7, day=31)
+    for _ in range((end_of_july - today).days + 1):  # Check through end of July
         if check_date.weekday() == 5:  # Saturday
             sat_date = check_date
             sun_date = check_date + timedelta(days=1)
