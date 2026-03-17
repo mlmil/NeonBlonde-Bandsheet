@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Blonde - The Band Sheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Monaco', 'Courier New', monospace;
+            background: #0a0e27;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #1a1f3a;
+            padding: 40px;
+            border: 2px solid #ff006e;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #ff006e;
+            padding-bottom: 20px;
+        }
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff006e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+        .updated {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #00d9ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 25px 0 15px 0;
+            border-bottom: 1px solid #00d9ff;
+            padding-bottom: 8px;
+        }
+        .divider {
+            border-top: 1px solid #333;
+            margin: 30px 0;
+        }
+        .entry {
+            margin: 8px 0;
+            padding-left: 10px;
+            line-height: 1.8;
+        }
+        .this-week-entry {
+            color: #00ff88;
+            font-weight: bold;
+        }
+        .gig {
+            color: #ffff00;
+        }
+        .member-out {
+            color: #ff6b6b;
+        }
+        .none {
+            color: #666;
+            font-style: italic;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+            font-size: 12px;
+        }
+        @media (prefers-color-scheme: light) {
+            body {
+                background: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                background: #fff;
+                border-color: #ff006e;
+            }
+            .this-week-entry {
+                color: #0066cc;
+            }
+            .gig {
+                color: #ff8800;
+            }
+            .member-out {
+                color: #cc0000;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🎸 Neon Blonde - The Band Sheet</div>
+            <div class="updated" id="updated">Updated: Loading...</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">This Week</div>
+            <div id="this-week">Loading...</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <div class="section-title">Booked Gigs</div>
+            <div id="booked-gigs">Loading...</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <div class="section-title">Members Out</div>
+            <div id="members-out">Loading...</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section">
+            <div class="section-title">Fully Free Weekends</div>
+            <div id="free-weekends">Loading...</div>
+        </div>
+
+        <div class="footer">
+            <p>Questions? Hit me up. - Neon</p>
+            <p style="margin-top: 20px; color: #555;">Last updated: <span id="last-updated">Loading...</span></p>
+        </div>
+    </div>
+
+    <script>
+        function addEntries(containerId, entries, entryClass) {
+            const container = document.getElementById(containerId);
+            if (entries.length > 0) {
+                entries.forEach(text => {
+                    const div = document.createElement('div');
+                    div.className = `entry ${entryClass}`;
+                    div.textContent = text;
+                    container.appendChild(div);
+                });
+            } else {
+                const div = document.createElement('div');
+                div.className = 'entry none';
+                div.textContent = '(None scheduled)';
+                container.appendChild(div);
+            }
+        }
+
+        fetch('bandsheet-data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('updated').textContent = `Updated: ${data.updated}`;
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+                addEntries('this-week', data.this_week, 'this-week-entry');
+                addEntries('booked-gigs', data.booked_gigs, 'gig');
+                addEntries('members-out', data.members_out, 'member-out');
+                addEntries('free-weekends', data.free_weekends, '');
+            })
+            .catch(error => {
+                console.error('Error loading band sheet:', error);
+                const container = document.querySelector('.container');
+                container.innerHTML = '';
+                const p = document.createElement('p');
+                p.textContent = 'Error loading band sheet data.';
+                p.style.color = '#ff0000';
+                container.appendChild(p);
+            });
+    </script>
+</body>
+</html>
