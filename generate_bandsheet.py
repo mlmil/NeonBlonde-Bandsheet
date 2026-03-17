@@ -92,7 +92,7 @@ def parse_events(events):
     gigs = []
     member_outs = {}
 
-    member_out_keywords = {"out", "unavailable", "absent", "blocked", "vacation", "off"}
+    member_out_keywords = {"out", "unavailable", "absent", "blocked", "vacation", "off", "birthday"}
 
     for event in events:
         title = event.get("summary", "").lower()
