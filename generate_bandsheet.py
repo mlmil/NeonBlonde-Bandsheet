@@ -1,60 +1,60 @@
 #!/usr/bin/env python3
 """
 Generate Neon Blonde Band Sheet from Google Calendar.
-Uses gws CLI (already authenticated) to fetch events.
+Uses Google Calendar API with service account authentication.
 """
 
 import json
 import sys
-import subprocess
+import os
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+from google.oauth2.service_account import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
 
 # Configuration
 CALENDAR_ID = "neonblondevc@gmail.com"
 PT_TZ = ZoneInfo("America/Los_Angeles")
+SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
 
 
 def get_calendar_events():
-    """Fetch all future events using gws CLI."""
-    print("[INFO] Fetching calendar events using gws CLI...")
+    """Fetch all future events using Google Calendar API."""
+    print("[INFO] Fetching calendar events using Google Calendar API...")
 
-    today = datetime.now(PT_TZ).date()
-    time_min = datetime.combine(today, datetime.min.time(), tzinfo=PT_TZ).isoformat()
-    time_max = (datetime.now(PT_TZ) + timedelta(days=180)).isoformat()
-
-    params = {
-        "calendarId": CALENDAR_ID,
-        "timeMin": time_min,
-        "timeMax": time_max,
-        "singleEvents": True,
-        "orderBy": "startTime",
-    }
+    # Load service account credentials from environment variable
+    creds_json = os.environ.get("SERVICE_ACCOUNT_JSON")
+    if not creds_json:
+        print("ERROR: SERVICE_ACCOUNT_JSON environment variable not set")
+        sys.exit(1)
 
     try:
-        cmd = ["gws", "calendar", "events", "list", "--params", json.dumps(params), "--format", "json"]
-        print(f"[DEBUG] Running: {' '.join(cmd[:4])} ...")
+        creds_dict = json.loads(creds_json)
+        credentials = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
 
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        service = build("calendar", "v3", credentials=credentials)
 
-        if result.returncode != 0:
-            print(f"ERROR: gws command failed with code {result.returncode}")
-            print(f"STDERR: {result.stderr}")
-            sys.exit(1)
+        today = datetime.now(PT_TZ).date()
+        time_min = datetime.combine(today, datetime.min.time(), tzinfo=PT_TZ).isoformat()
+        time_max = (datetime.now(PT_TZ) + timedelta(days=180)).isoformat()
 
-        data = json.loads(result.stdout)
-        items = data.get("items", [])
+        print(f"[DEBUG] Querying calendar {CALENDAR_ID} from {time_min} to {time_max}")
+
+        events_result = service.events().list(
+            calendarId=CALENDAR_ID,
+            timeMin=time_min,
+            timeMax=time_max,
+            singleEvents=True,
+            orderBy="startTime",
+        ).execute()
+
+        items = events_result.get("items", [])
         print(f"[OK] Retrieved {len(items)} events")
         return items
 
-    except subprocess.TimeoutExpired:
-        print("ERROR: gws command timed out")
-        sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"ERROR: Failed to parse gws output: {e}")
-        sys.exit(1)
-    except FileNotFoundError:
-        print("ERROR: gws CLI not found. Is it installed and in PATH?")
+        print(f"ERROR: Failed to parse SERVICE_ACCOUNT_JSON: {e}")
         sys.exit(1)
     except Exception as e:
         print(f"ERROR: {e}")

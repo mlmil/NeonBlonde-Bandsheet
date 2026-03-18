@@ -8,17 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: 'stable'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install gws CLI
-        run: go install github.com/joshdk/gws@latest
+      - run: pip install -r requirements.txt
       - run: python3 generate_bandsheet.py
         env:
-          PATH: /home/runner/go/bin:${{ env.PATH }}
+          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
       - run: |
           git config user.name "Bot"
           git config user.email "bot@neon.com"
