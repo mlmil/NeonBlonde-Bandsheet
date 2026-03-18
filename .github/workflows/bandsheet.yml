@@ -11,6 +11,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install gws CLI
+        run: |
+          curl -L https://github.com/joshdk/gws/releases/download/v0.23.0/gws-linux-amd64 -o gws
+          chmod +x gws
+          sudo mv gws /usr/local/bin/
+          gws version
       - run: python3 generate_bandsheet.py
       - run: |
           git config user.name "Bot"
