@@ -20,25 +20,33 @@ TOKEN_JSON = os.environ.get("NEON_TOKEN_JSON")
 CLIENT_SECRETS_JSON = os.environ.get("NEON_CLIENT_SECRETS_JSON")
 
 if not TOKEN_JSON or not CLIENT_SECRETS_JSON:
-    print("Error: NEON_TOKEN_JSON and NEON_CLIENT_SECRETS_JSON environment variables required")
+    print("ERROR: Missing environment variables")
+    if not TOKEN_JSON:
+        print("  - NEON_TOKEN_JSON not set")
+    if not CLIENT_SECRETS_JSON:
+        print("  - NEON_CLIENT_SECRETS_JSON not set")
     sys.exit(1)
 
+print("[DEBUG] Environment variables loaded")
 try:
     token_data = json.loads(TOKEN_JSON)
+    print("[DEBUG] Token JSON parsed successfully")
     client_secrets = json.loads(CLIENT_SECRETS_JSON)
+    print("[DEBUG] Client secrets JSON parsed successfully")
 except json.JSONDecodeError as e:
-    print(f"Error parsing JSON: {e}")
+    print(f"ERROR parsing JSON: {e}")
     sys.exit(1)
 
 
 def refresh_access_token(token_data, client_secrets):
     """Refresh OAuth token using refresh_token."""
+    print("[DEBUG] Starting token refresh...")
     client_id = client_secrets["installed"]["client_id"]
     client_secret = client_secrets["installed"]["client_secret"]
     refresh_token = token_data.get("refresh_token")
 
     if not refresh_token:
-        print("Error: No refresh_token found")
+        print("ERROR: No refresh_token found in token data")
         sys.exit(1)
 
     url = "https://oauth2.googleapis.com/token"
@@ -50,19 +58,24 @@ def refresh_access_token(token_data, client_secrets):
     }
 
     try:
+        print(f"[DEBUG] Posting to {url}")
         response = requests.post(url, json=payload)
+        print(f"[DEBUG] Response status: {response.status_code}")
         response.raise_for_status()
         new_token = response.json()
         token_data["access_token"] = new_token["access_token"]
         token_data["expires_in"] = new_token.get("expires_in", 3599)
+        print("[DEBUG] Token refreshed successfully")
         return token_data
     except requests.RequestException as e:
-        print(f"Error refreshing token: {e}")
+        print(f"ERROR refreshing token: {e}")
+        print(f"[DEBUG] Response: {response.text if 'response' in locals() else 'N/A'}")
         sys.exit(1)
 
 
 def get_calendar_events(access_token):
     """Fetch all future events from Neon Blonde calendar."""
+    print("[DEBUG] Starting calendar fetch...")
     headers = {"Authorization": f"Bearer {access_token}"}
 
     # Get events from today onwards for the next 6 months
@@ -78,12 +91,17 @@ def get_calendar_events(access_token):
         "orderBy": "startTime",
     }
 
+    print(f"[DEBUG] Fetching from {time_min} to {time_max}")
     try:
         response = requests.get(url, headers=headers, params=params)
+        print(f"[DEBUG] Response status: {response.status_code}")
         response.raise_for_status()
-        return response.json().get("items", [])
+        items = response.json().get("items", [])
+        print(f"[DEBUG] Retrieved {len(items)} events")
+        return items
     except requests.RequestException as e:
-        print(f"Error fetching calendar events: {e}")
+        print(f"ERROR fetching calendar events: {e}")
+        print(f"[DEBUG] Response: {response.text if 'response' in locals() else 'N/A'}")
         sys.exit(1)
 
 
@@ -239,25 +257,45 @@ def generate_bandsheet(gigs, member_outs):
 
 def main():
     """Main execution."""
+    print("=" * 60)
+    print("NEON BLONDE BAND SHEET GENERATOR")
+    print("=" * 60)
+
     # Refresh token if needed
+    print("\n[STEP 1] Refreshing access token...")
     updated_token = refresh_access_token(token_data, client_secrets)
     access_token = updated_token["access_token"]
+    print(f"[OK] Access token ready (expires in {updated_token.get('expires_in', '?')} seconds)")
 
     # Fetch and parse calendar events
+    print("\n[STEP 2] Fetching calendar events...")
     events = get_calendar_events(access_token)
+
+    print("\n[STEP 3] Parsing events...")
     gigs, member_outs = parse_events(events)
+    print(f"[DEBUG] Parsed {len(gigs)} gigs and {len(member_outs)} member outs")
 
     # Generate Band Sheet
+    print("\n[STEP 4] Generating Band Sheet...")
     bandsheet = generate_bandsheet(gigs, member_outs)
 
     # Write JSON data file
-    with open("bandsheet-data.json", "w") as f:
-        json.dump(bandsheet, f, indent=2)
+    print("\n[STEP 5] Writing JSON file...")
+    try:
+        with open("bandsheet-data.json", "w") as f:
+            json.dump(bandsheet, f, indent=2)
+        print("[OK] bandsheet-data.json written successfully")
+    except Exception as e:
+        print(f"ERROR writing file: {e}")
+        sys.exit(1)
 
-    print("✓ Band Sheet generated successfully")
+    print("\n" + "=" * 60)
+    print("✓ BAND SHEET GENERATED SUCCESSFULLY")
+    print("=" * 60)
     print(f"  - {len(bandsheet['booked_gigs'])} gigs")
     print(f"  - {len(bandsheet['members_out'])} member outs")
     print(f"  - {len(bandsheet['free_weekends'])} free weekends")
+    print(f"  - Updated: {bandsheet['updated']}")
 
 
 if __name__ == "__main__":
