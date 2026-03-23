@@ -115,7 +115,7 @@ def parse_events(events):
                 "title": event.get("summary", "Gig"),
             })
 
-    return sorted(gigs, key=lambda x: (x["date"], x["time"] or "")), member_outs
+    return sorted(gigs, key=lambda x: (x["date"], x["time"] or datetime.min.time())), member_outs, member_outs
 
 
 def format_time_12h(time_obj):
