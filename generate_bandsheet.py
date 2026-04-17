@@ -84,7 +84,11 @@ def parse_events(events):
         else:
             venue = e["summary"]
             city = e["location"]
-            display = f"{venue}, {city}" if city else venue
+            # If location already contains the venue name, use it as-is
+            if city and venue.lower() in city.lower():
+                display = city
+            else:
+                display = f"{venue}, {city}" if city else venue
             gigs.append({
                 "date": e["start_date"],
                 "time": e["start_time"],
