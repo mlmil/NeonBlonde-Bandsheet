@@ -47,11 +47,11 @@ def get_calendar_events():
 
         today = datetime.now(PT_TZ).date()
         time_min = datetime.combine(today, datetime.min.time(), tzinfo=PT_TZ).isoformat()
-        # Fetch through end of September
-        sept_end = date(today.year if today.month <= 9 else today.year + 1, 9, 30)
-        time_max = datetime.combine(sept_end, datetime.max.time(), tzinfo=PT_TZ).isoformat()
+        # Fetch through end of year
+        year_end = date(today.year, 12, 31)
+        time_max = datetime.combine(year_end, datetime.max.time(), tzinfo=PT_TZ).isoformat()
 
-        print(f"[DEBUG] Querying {CALENDAR_ID} from {today} to {sept_end}")
+        print(f"[DEBUG] Querying {CALENDAR_ID} from {today} to {year_end}")
 
         events_result = service.events().list(
             calendarId=CALENDAR_ID,
@@ -190,31 +190,31 @@ def generate_bandsheet(gigs, member_outs):
                 entry = f"- {member_name}: {day_start} {date_start} to {day_end} {date_end}"
             members_out.append(entry)
 
-    # FULLY FREE WEEKENDS — through end of September
+    # FULLY FREE WEEKENDS (FRI-SAT) — through end of year
     free_weekends = []
-    sept_end = date(today.year if today.month <= 9 else today.year + 1, 9, 30)
+    year_end = date(today.year, 12, 31)
     check_date = today
-    while check_date <= sept_end:
-        if check_date.weekday() == 5:  # Saturday
-            sat_date = check_date
-            sun_date = check_date + timedelta(days=1)
+    while check_date <= year_end:
+        if check_date.weekday() == 4:  # Friday
+            fri_date = check_date
+            sat_date = check_date + timedelta(days=1)
 
+            fri_gigs = [g for g in gigs if g["date"] == fri_date]
             sat_gigs = [g for g in gigs if g["date"] == sat_date]
-            sun_gigs = [g for g in gigs if g["date"] == sun_date]
 
+            fri_blocked = any(
+                start <= fri_date < end
+                for dates in member_outs.values()
+                for start, end in dates
+            )
             sat_blocked = any(
                 start <= sat_date < end
                 for dates in member_outs.values()
                 for start, end in dates
             )
-            sun_blocked = any(
-                start <= sun_date < end
-                for dates in member_outs.values()
-                for start, end in dates
-            )
 
-            if not sat_gigs and not sun_gigs and not sat_blocked and not sun_blocked:
-                entry = f"- SAT-SUN {sat_date.strftime('%B %-d')}-{sun_date.strftime('%-d')}"
+            if not fri_gigs and not sat_gigs and not fri_blocked and not sat_blocked:
+                entry = f"- FRI-SAT {fri_date.strftime('%B %-d')}-{sat_date.strftime('%-d')}"
                 free_weekends.append(entry)
 
         check_date += timedelta(days=1)
