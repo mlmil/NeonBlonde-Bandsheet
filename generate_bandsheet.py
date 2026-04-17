@@ -24,18 +24,32 @@ def get_calendar_events():
     print("[INFO] Fetching calendar events using OAuth2...")
 
     token_json = os.environ.get("NEON_TOKEN_JSON")
+    secrets_json = os.environ.get("NEON_CLIENT_SECRETS_JSON")
     if not token_json:
         print("ERROR: NEON_TOKEN_JSON environment variable not set")
         sys.exit(1)
 
     try:
         token_data = json.loads(token_json)
+
+        # client_id/secret may be in token.json or in client_secrets.json
+        client_id = token_data.get("client_id")
+        client_secret = token_data.get("client_secret")
+        token_uri = token_data.get("token_uri", "https://oauth2.googleapis.com/token")
+
+        if secrets_json and (not client_id or not client_secret):
+            secrets_data = json.loads(secrets_json)
+            installed = secrets_data.get("installed") or secrets_data.get("web", {})
+            client_id = client_id or installed.get("client_id")
+            client_secret = client_secret or installed.get("client_secret")
+            token_uri = token_uri or installed.get("token_uri", "https://oauth2.googleapis.com/token")
+
         creds = Credentials(
             token=token_data.get("access_token"),
             refresh_token=token_data.get("refresh_token"),
-            token_uri=token_data.get("token_uri", "https://oauth2.googleapis.com/token"),
-            client_id=token_data.get("client_id"),
-            client_secret=token_data.get("client_secret"),
+            token_uri=token_uri,
+            client_id=client_id,
+            client_secret=client_secret,
             scopes=SCOPES,
         )
 
