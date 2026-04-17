@@ -79,6 +79,15 @@
             color: #666;
             font-style: italic;
         }
+        .month-header {
+            color: #ff006e;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 16px 0 4px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #ff006e44;
+        }
         .footer {
             text-align: center;
             margin-top: 50px;
@@ -166,6 +175,34 @@
             }
         }
 
+        function addWeekendsByMonth(containerId, entries) {
+            const container = document.getElementById(containerId);
+            if (!entries.length) {
+                const div = document.createElement('div');
+                div.className = 'entry none';
+                div.textContent = '(None scheduled)';
+                container.appendChild(div);
+                return;
+            }
+            let currentMonth = null;
+            entries.forEach(text => {
+                // text looks like "- FRI April 18" — extract month word
+                const parts = text.replace('- ', '').split(' ');
+                const month = parts[1]; // e.g. "April"
+                if (month !== currentMonth) {
+                    currentMonth = month;
+                    const header = document.createElement('div');
+                    header.className = 'month-header';
+                    header.textContent = month.toUpperCase();
+                    container.appendChild(header);
+                }
+                const div = document.createElement('div');
+                div.className = 'entry';
+                div.textContent = text;
+                container.appendChild(div);
+            });
+        }
+
         fetch('bandsheet-data.json')
             .then(response => response.json())
             .then(data => {
@@ -175,7 +212,7 @@
                 addEntries('this-week', data.this_week, 'this-week-entry');
                 addEntries('booked-gigs', data.booked_gigs, 'gig');
                 addEntries('members-out', data.members_out, 'member-out');
-                addEntries('free-weekends', data.free_weekends, '');
+                addWeekendsByMonth('free-weekends', data.free_weekends);
             })
             .catch(error => {
                 console.error('Error loading band sheet:', error);
