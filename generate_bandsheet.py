@@ -31,22 +31,32 @@ def get_calendar_events():
 
     try:
         token_data = json.loads(token_json)
+        print(f"[DEBUG] Token fields present: {list(token_data.keys())}")
 
-        # client_id/secret may be in token.json or in client_secrets.json
-        client_id = token_data.get("client_id")
-        client_secret = token_data.get("client_secret")
-        token_uri = token_data.get("token_uri", "https://oauth2.googleapis.com/token")
+        # Always pull client_id/secret from NEON_CLIENT_SECRETS_JSON
+        client_id = None
+        client_secret = None
+        token_uri = "https://oauth2.googleapis.com/token"
 
-        if secrets_json and (not client_id or not client_secret):
+        if secrets_json:
             secrets_data = json.loads(secrets_json)
-            installed = secrets_data.get("installed") or secrets_data.get("web", {})
-            client_id = client_id or installed.get("client_id")
-            client_secret = client_secret or installed.get("client_secret")
-            token_uri = token_uri or installed.get("token_uri", "https://oauth2.googleapis.com/token")
+            installed = secrets_data.get("installed") or secrets_data.get("web") or {}
+            client_id = installed.get("client_id")
+            client_secret = installed.get("client_secret")
+            token_uri = installed.get("token_uri", token_uri)
+            print(f"[DEBUG] Loaded client_id from secrets: {bool(client_id)}")
+
+        # Fall back to token.json fields if secrets not provided
+        client_id = client_id or token_data.get("client_id")
+        client_secret = client_secret or token_data.get("client_secret")
+        refresh_token = token_data.get("refresh_token")
+        access_token = token_data.get("access_token") or token_data.get("token")
+
+        print(f"[DEBUG] Has refresh_token: {bool(refresh_token)}, Has access_token: {bool(access_token)}")
 
         creds = Credentials(
-            token=token_data.get("access_token"),
-            refresh_token=token_data.get("refresh_token"),
+            token=access_token,
+            refresh_token=refresh_token,
             token_uri=token_uri,
             client_id=client_id,
             client_secret=client_secret,
@@ -56,6 +66,8 @@ def get_calendar_events():
         if creds.expired and creds.refresh_token:
             creds.refresh(Request())
             print("[INFO] OAuth token refreshed")
+        elif not creds.valid:
+            print("[WARN] Token may be expired and no refresh_token available")
 
         service = build("calendar", "v3", credentials=creds)
 
