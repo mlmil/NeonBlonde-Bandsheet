@@ -82,10 +82,13 @@ def parse_events(events):
                 member_outs[name] = []
             member_outs[name].append((e["start_date"], e["end_date"]))
         else:
+            venue = e["summary"]
+            city = e["location"]
+            display = f"{venue}, {city}" if city else venue
             gigs.append({
                 "date": e["start_date"],
                 "time": e["start_time"],
-                "venue": e["location"] or "TBD",
+                "venue": display,
                 "title": e["summary"],
             })
 
