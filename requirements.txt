@@ -1,4 +1,2 @@
-google-auth-oauthlib==1.2.1
-google-auth-httplib2==0.2.0
-google-api-python-client==2.127.0
-google-auth==2.32.0
+requests==2.31.0
+icalendar==5.0.12
