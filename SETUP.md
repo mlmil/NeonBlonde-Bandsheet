@@ -36,7 +36,7 @@ You need to store your OAuth token and client secrets as GitHub Secrets so the w
 On your Mac:
 
 ```bash
-cd '/Volumes/VADER/GitHub Repos/NeonBlonde-Bandsheet'
+cd '/Users/studio_hub/neon-bandsheet'
 
 # Initialize git
 git init

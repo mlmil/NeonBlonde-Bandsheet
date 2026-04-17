@@ -16,7 +16,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python3 generate_bandsheet.py
         env:
-          SERVICE_ACCOUNT_JSON: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          NEON_TOKEN_JSON: ${{ secrets.NEON_TOKEN_JSON }}
       - run: |
           git config user.name "Bot"
           git config user.email "bot@neon.com"
