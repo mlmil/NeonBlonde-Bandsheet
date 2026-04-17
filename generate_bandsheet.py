@@ -190,31 +190,20 @@ def generate_bandsheet(gigs, member_outs):
                 entry = f"- {member_name}: {day_start} {date_start} to {day_end} {date_end}"
             members_out.append(entry)
 
-    # FULLY FREE WEEKENDS (FRI-SAT) — through end of year
+    # OPEN FRIDAYS, SATURDAYS & SUNDAYS — through end of year
     free_weekends = []
     year_end = date(today.year, 12, 31)
     check_date = today
     while check_date <= year_end:
-        if check_date.weekday() == 4:  # Friday
-            fri_date = check_date
-            sat_date = check_date + timedelta(days=1)
-
-            fri_gigs = [g for g in gigs if g["date"] == fri_date]
-            sat_gigs = [g for g in gigs if g["date"] == sat_date]
-
-            fri_blocked = any(
-                start <= fri_date < end
+        if check_date.weekday() in (4, 5, 6):  # Fri, Sat, Sun
+            day_gigs = [g for g in gigs if g["date"] == check_date]
+            day_blocked = any(
+                start <= check_date < end
                 for dates in member_outs.values()
                 for start, end in dates
             )
-            sat_blocked = any(
-                start <= sat_date < end
-                for dates in member_outs.values()
-                for start, end in dates
-            )
-
-            if not fri_gigs and not sat_gigs and not fri_blocked and not sat_blocked:
-                entry = f"- FRI-SAT {fri_date.strftime('%B %-d')}-{sat_date.strftime('%-d')}"
+            if not day_gigs and not day_blocked:
+                entry = f"- {check_date.strftime('%a').upper()} {check_date.strftime('%B %-d')}"
                 free_weekends.append(entry)
 
         check_date += timedelta(days=1)
