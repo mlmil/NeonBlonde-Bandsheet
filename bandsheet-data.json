@@ -1,10 +1,9 @@
 {
-  "updated": "April 24, 2026 @ 8:10 AM PT",
+  "updated": "April 25, 2026 @ 7:44 AM PT",
   "this_week": [
-    "ALFRED OUT FRIDAY",
-    "CURTIS OUT FRIDAY",
     "SATURDAY @7PM Tony's Pizza, Ventura",
-    "KYLE OUT SUNDAY"
+    "KYLE OUT SUNDAY",
+    "ALFRED OUT FRIDAY"
   ],
   "booked_gigs": [
     "SAT 4-25-2026 @7PM \u2014 Tony's Pizza, Ventura",
@@ -13,6 +12,7 @@
     "SAT 5-16-2026 @8PM \u2014 The Sewer, Ventura",
     "SUN 5-17-2026 @12PM \u2014 Parquee 1055, Santa Paula",
     "FRI 5-29-2026 @6PM \u2014 Figueroa Mountain, Santa Barbara",
+    "SAT 5-30-2026 @7PM \u2014 Tony's Pizza, Ventura",
     "FRI 6-5-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 6-6-2026 @2PM \u2014 The Cruisery, Santa Barbara",
     "SAT 6-13-2026 @3PM \u2014 Fess Parker Winery, Los Olivos",
@@ -22,14 +22,12 @@
     "SAT 9-12-2026 @4PM \u2014 Fox Wine Co. & Topa Topa, Santa Barbara: Funk Zone"
   ],
   "members_out": [
-    "- Alfred: FRI 4-24-2026",
     "- Alfred: FRI 5-1-2026",
     "- Alfred: SAT 5-2-2026",
     "- Alfred: SAT 5-23-2026",
     "- Alfred: SAT 6-27-2026 to THU 7-2-2026",
     "- Alfred: SAT 9-26-2026",
     "- Alfred: FRI 11-13-2026",
-    "- Curtis: FRI 4-24-2026 to WED 4-29-2026",
     "- Curtis: SAT 5-23-2026 to TUE 5-26-2026",
     "- Dave: SAT 5-9-2026",
     "- Dave: THU 6-18-2026",
@@ -47,7 +45,6 @@
     "- FRI May 8",
     "- SAT May 9",
     "- FRI May 22",
-    "- SAT May 30",
     "- SUN May 31",
     "- SUN June 7",
     "- FRI June 12",
