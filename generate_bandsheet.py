@@ -246,15 +246,26 @@ def create_drive_receipt(gigs):
 
                 folder_id = folders[0]['id']
 
+                # Build full gig list for the receipt
+                all_gigs_lines = []
+                for g in gigs:
+                    marker = ">>> " if g == gig else "    "
+                    g_date = g['date'].strftime('%a %m/%d/%Y')
+                    g_time = g['time'].strftime('@%-I%p') if g['time'] else ''
+                    all_gigs_lines.append(f"{marker}{g_date} {g_time} — {g['venue']}")
+                all_gigs_text = "\n".join(all_gigs_lines)
+
                 # Create receipt text for this gig
                 receipt_text = f"""NEON BLONDE - BANDSHEET PUBLICATION RECEIPT
+Generated: {timestamp}
+Bandsheet: https://mlmil.github.io/NeonBlonde-Bandsheet/
 
-Event: {gig['title']}
-Venue: {venue}
-Date: {gig_date.strftime('%A, %B %d, %Y')}
-Time: {gig['time'].strftime('%I:%M %p PT') if gig['time'] else 'Time TBD'}
+THIS GIG (>>> marked below):
+  {gig['title']}
+  {gig_date.strftime('%A, %B %d, %Y')} {gig['time'].strftime('@ %-I:%M %p PT') if gig['time'] else ''}
 
-Published to Bandsheet: {timestamp}
+ALL UPCOMING GIGS AS OF THIS RUN:
+{all_gigs_text}
 """
 
                 # Create the file in this venue's folder
