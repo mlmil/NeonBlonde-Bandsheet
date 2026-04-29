@@ -2,6 +2,7 @@
 """
 Generate Neon Blonde Band Sheet from public Google Calendar ICS feed.
 No auth required — calendar is public.
+Creates a receipt document in Google Drive showing what was generated.
 """
 
 import json
@@ -10,10 +11,22 @@ import requests
 from icalendar import Calendar
 from datetime import datetime, timedelta, date, time
 from zoneinfo import ZoneInfo
+from google.auth.transport.requests import Request
+from google.oauth2.service_account import Credentials
+from google.oauth2 import service_account
+from google.auth import default
+from google.api_core.exceptions import GoogleAPIError
+from googleapiclient.discovery import build
 
-CALENDAR_ID = "neonblondevc@gmail.com"
+# Load config
+with open("config.json") as f:
+    CONFIG = json.load(f)
+
+CALENDAR_ID = CONFIG.get("calendar_id", "neonblondevc@gmail.com")
 ICS_URL = f"https://calendar.google.com/calendar/ical/{CALENDAR_ID.replace('@', '%40')}/public/basic.ics"
 PT_TZ = ZoneInfo("America/Los_Angeles")
+DRIVE_FOLDER_ID = CONFIG.get("drive_folder_id")
+CREDENTIALS_FILE = CONFIG.get("credentials_file", "credentials.json")
 
 MEMBER_OUT_KEYWORDS = {"out", "unavailable", "absent", "blocked", "vacation", "off"}
 
@@ -181,6 +194,98 @@ def generate_bandsheet(gigs, member_outs):
     }
 
 
+def create_drive_receipt(bandsheet):
+    """Create a receipt document in Google Drive showing what was generated."""
+    if not DRIVE_FOLDER_ID:
+        print("[SKIP] No DRIVE_FOLDER_ID in config — skipping receipt creation")
+        return
+
+    try:
+        # Try to load credentials from file
+        try:
+            creds = service_account.Credentials.from_service_account_file(
+                CREDENTIALS_FILE,
+                scopes=["https://www.googleapis.com/auth/drive"]
+            )
+            print("[INFO] Using service account credentials")
+        except:
+            # Fallback to default credentials (useful in GitHub Actions)
+            creds, _ = default(scopes=["https://www.googleapis.com/auth/drive"])
+            print("[INFO] Using default credentials")
+
+        drive_service = build("drive", "v3", credentials=creds)
+
+        # Format receipt content
+        timestamp = datetime.now(PT_TZ).strftime("%Y-%m-%d %H:%M:%S PT")
+
+        receipt_text = f"""NEON BLONDE BANDSHEET UPDATE RECEIPT
+Generated: {timestamp}
+
+SUMMARY
+-------
+Total gigs: {len(bandsheet.get('booked_gigs', []))}
+Member outs: {len(bandsheet.get('members_out', []))}
+Open weekend days: {len(bandsheet.get('free_weekends', []))}
+
+THIS WEEK
+---------"""
+
+        for entry in bandsheet.get('this_week', []):
+            receipt_text += f"\n{entry}"
+
+        receipt_text += "\n\nBOOKED GIGS\n-----------"
+        for gig in bandsheet.get('booked_gigs', []):
+            receipt_text += f"\n{gig}"
+
+        if bandsheet.get('members_out'):
+            receipt_text += "\n\nMEMBERS OUT\n-----------"
+            for member in bandsheet.get('members_out', []):
+                receipt_text += f"\n{member}"
+
+        if bandsheet.get('free_weekends'):
+            receipt_text += "\n\nOPEN WEEKEND DAYS\n-----------------"
+            for day in bandsheet.get('free_weekends', []):
+                receipt_text += f"\n{day}"
+
+        # Create the file in Google Drive
+        file_metadata = {
+            'name': f"Bandsheet Receipt {datetime.now(PT_TZ).strftime('%Y-%m-%d %H:%M')}",
+            'mimeType': 'text/plain',
+            'parents': [DRIVE_FOLDER_ID]
+        }
+
+        from googleapiclient.http import MediaFileUpload
+        media = MediaFileUpload(
+            filename=None,
+            mimetype='text/plain',
+            chunksize=256*1024,
+            resumable=True
+        )
+
+        # For plain text, we'll create via simple API
+        file_metadata = {
+            'name': f"Bandsheet Receipt {datetime.now(PT_TZ).strftime('%Y-%m-%d %H:%M')}",
+            'mimeType': 'text/plain',
+            'parents': [DRIVE_FOLDER_ID]
+        }
+
+        # Use multipart upload with the text content
+        from io import BytesIO
+        file_stream = BytesIO(receipt_text.encode('utf-8'))
+        media = media = None
+
+        file_result = drive_service.files().create(
+            body=file_metadata,
+            media_body=BytesIO(receipt_text.encode('utf-8')),
+            fields='id, webViewLink'
+        ).execute()
+
+        print(f"[OK] Receipt created: {file_result.get('webViewLink')}")
+
+    except Exception as e:
+        print(f"[WARN] Failed to create receipt: {e}")
+
+
 def main():
     print("=" * 60)
     print("NEON BLONDE BAND SHEET GENERATOR")
@@ -200,6 +305,9 @@ def main():
     print(f"  {len(bandsheet['members_out'])} member outs")
     print(f"  {len(bandsheet['free_weekends'])} open weekend days")
     print(f"  Updated: {bandsheet['updated']}")
+
+    # Create receipt in Drive
+    create_drive_receipt(bandsheet)
 
 
 if __name__ == "__main__":
