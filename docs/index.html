@@ -517,7 +517,7 @@
             });
         }
 
-        fetch('../bandsheet-data.json')
+        fetch('bandsheet-data.json')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('updated').textContent = `Updated: ${data.updated}`;
