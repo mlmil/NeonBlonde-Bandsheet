@@ -6,6 +6,7 @@ Creates a receipt document in Google Drive showing what was generated.
 """
 
 import json
+import os
 import sys
 import shutil
 import requests
@@ -13,10 +14,8 @@ from icalendar import Calendar
 from datetime import datetime, timedelta, date, time
 from zoneinfo import ZoneInfo
 from google.auth.transport.requests import Request
-from google.oauth2.service_account import Credentials
-from google.oauth2 import service_account
-from google.auth import default
-from google.api_core.exceptions import GoogleAPIError
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 # Load config
@@ -201,18 +200,22 @@ def create_drive_receipt(gigs):
         print("[SKIP] No DRIVE_FOLDER_ID in config — skipping receipt creation")
         return
 
+    SCOPES = ["https://www.googleapis.com/auth/drive"]
+    TOKEN_FILE = CONFIG.get("token_file", "token.json")
+
     try:
-        # Try to load credentials from file
-        try:
-            creds = service_account.Credentials.from_service_account_file(
-                CREDENTIALS_FILE,
-                scopes=["https://www.googleapis.com/auth/drive"]
-            )
-            print("[INFO] Using service account credentials")
-        except:
-            # Fallback to default credentials (useful in GitHub Actions)
-            creds, _ = default(scopes=["https://www.googleapis.com/auth/drive"])
-            print("[INFO] Using default credentials")
+        creds = None
+        if os.path.exists(TOKEN_FILE):
+            creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
+                creds = flow.run_local_server(port=0)
+            with open(TOKEN_FILE, "w") as f:
+                f.write(creds.to_json())
+        print("[INFO] Using OAuth2 credentials")
 
         drive_service = build("drive", "v3", credentials=creds)
         timestamp = datetime.now(PT_TZ).strftime("%Y-%m-%d %H:%M:%S PT")
@@ -222,12 +225,13 @@ def create_drive_receipt(gigs):
             venue = gig['venue']
             gig_date = gig['date']
 
-            # Build folder name matching Google Apps Script format
-            folder_name = f"{gig['title']} - {gig_date.strftime('%m/%d/%Y')}"
+            # Search by title (contains) to handle naming variations and missing dates
+            safe_title = gig['title'].replace("'", "\\'")
+            folder_name = gig['title']
 
             try:
                 # Search for the folder
-                query = f"name = '{folder_name}' and '{DRIVE_FOLDER_ID}' in parents and trashed = false"
+                query = f"name contains '{safe_title}' and '{DRIVE_FOLDER_ID}' in parents and trashed = false"
                 results = drive_service.files().list(
                     q=query,
                     spaces='drive',
@@ -261,9 +265,11 @@ Published to Bandsheet: {timestamp}
                 }
 
                 from io import BytesIO
+                from googleapiclient.http import MediaIoBaseUpload
+                media = MediaIoBaseUpload(BytesIO(receipt_text.encode('utf-8')), mimetype='text/plain')
                 file_result = drive_service.files().create(
                     body=file_metadata,
-                    media_body=BytesIO(receipt_text.encode('utf-8')),
+                    media_body=media,
                     fields='id, webViewLink'
                 ).execute()
 
