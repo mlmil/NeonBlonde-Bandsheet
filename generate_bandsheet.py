@@ -7,6 +7,7 @@ Creates a receipt document in Google Drive showing what was generated.
 
 import json
 import sys
+import shutil
 import requests
 from icalendar import Calendar
 from datetime import datetime, timedelta, date, time
@@ -289,6 +290,13 @@ def main():
     with open("bandsheet-data.json", "w") as f:
         json.dump(bandsheet, f, indent=2)
     print("[OK] bandsheet-data.json written")
+
+    # Copy to docs/ folder for GitHub Pages
+    try:
+        shutil.copy("bandsheet-data.json", "docs/bandsheet-data.json")
+        print("[OK] bandsheet-data.json copied to docs/")
+    except Exception as e:
+        print(f"[WARN] Failed to copy to docs/: {e}")
 
     print(f"\n  {len(bandsheet['booked_gigs'])} gigs")
     print(f"  {len(bandsheet['members_out'])} member outs")
