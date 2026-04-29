@@ -194,7 +194,7 @@ def generate_bandsheet(gigs, member_outs):
     }
 
 
-def create_drive_receipt(gigs):
+def create_drive_receipt(gigs, members_out):
     """Create a receipt document in each venue folder showing when it was published."""
     if not DRIVE_FOLDER_ID:
         print("[SKIP] No DRIVE_FOLDER_ID in config — skipping receipt creation")
@@ -255,6 +255,8 @@ def create_drive_receipt(gigs):
                     all_gigs_lines.append(f"{marker}{g_date} {g_time} — {g['venue']}")
                 all_gigs_text = "\n".join(all_gigs_lines)
 
+                members_out_text = "\n".join(members_out) if members_out else "  (none)"
+
                 # Create receipt text for this gig
                 receipt_text = f"""NEON BLONDE - BANDSHEET PUBLICATION RECEIPT
 Generated: {timestamp}
@@ -266,6 +268,9 @@ THIS GIG (>>> marked below):
 
 ALL UPCOMING GIGS AS OF THIS RUN:
 {all_gigs_text}
+
+MEMBERS OUT AS OF THIS RUN:
+{members_out_text}
 """
 
                 # Create the file in this venue's folder
@@ -321,7 +326,7 @@ def main():
     print(f"  Updated: {bandsheet['updated']}")
 
     # Create receipts in venue folders
-    create_drive_receipt(gigs)
+    create_drive_receipt(gigs, bandsheet['members_out'])
 
 
 if __name__ == "__main__":
