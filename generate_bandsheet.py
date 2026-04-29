@@ -194,8 +194,8 @@ def generate_bandsheet(gigs, member_outs):
     }
 
 
-def create_drive_receipt(bandsheet):
-    """Create a receipt document in Google Drive showing what was generated."""
+def create_drive_receipt(gigs):
+    """Create a receipt document in each venue folder showing when it was published."""
     if not DRIVE_FOLDER_ID:
         print("[SKIP] No DRIVE_FOLDER_ID in config — skipping receipt creation")
         return
@@ -214,76 +214,65 @@ def create_drive_receipt(bandsheet):
             print("[INFO] Using default credentials")
 
         drive_service = build("drive", "v3", credentials=creds)
-
-        # Format receipt content
         timestamp = datetime.now(PT_TZ).strftime("%Y-%m-%d %H:%M:%S PT")
 
-        receipt_text = f"""NEON BLONDE BANDSHEET UPDATE RECEIPT
-Generated: {timestamp}
+        # For each gig, find the matching venue folder and create a receipt
+        for gig in gigs:
+            venue = gig['venue']
+            gig_date = gig['date']
 
-SUMMARY
--------
-Total gigs: {len(bandsheet.get('booked_gigs', []))}
-Member outs: {len(bandsheet.get('members_out', []))}
-Open weekend days: {len(bandsheet.get('free_weekends', []))}
+            # Build folder name matching Google Apps Script format
+            folder_name = f"{gig['title']} - {gig_date.strftime('%m/%d/%Y')}"
 
-THIS WEEK
----------"""
+            try:
+                # Search for the folder
+                query = f"name = '{folder_name}' and '{DRIVE_FOLDER_ID}' in parents and trashed = false"
+                results = drive_service.files().list(
+                    q=query,
+                    spaces='drive',
+                    fields='files(id, name)',
+                    pageSize=1
+                ).execute()
 
-        for entry in bandsheet.get('this_week', []):
-            receipt_text += f"\n{entry}"
+                folders = results.get('files', [])
+                if not folders:
+                    print(f"[SKIP] Folder not found: {folder_name}")
+                    continue
 
-        receipt_text += "\n\nBOOKED GIGS\n-----------"
-        for gig in bandsheet.get('booked_gigs', []):
-            receipt_text += f"\n{gig}"
+                folder_id = folders[0]['id']
 
-        if bandsheet.get('members_out'):
-            receipt_text += "\n\nMEMBERS OUT\n-----------"
-            for member in bandsheet.get('members_out', []):
-                receipt_text += f"\n{member}"
+                # Create receipt text for this gig
+                receipt_text = f"""NEON BLONDE - BANDSHEET PUBLICATION RECEIPT
 
-        if bandsheet.get('free_weekends'):
-            receipt_text += "\n\nOPEN WEEKEND DAYS\n-----------------"
-            for day in bandsheet.get('free_weekends', []):
-                receipt_text += f"\n{day}"
+Event: {gig['title']}
+Venue: {venue}
+Date: {gig_date.strftime('%A, %B %d, %Y')}
+Time: {gig['time'].strftime('%I:%M %p PT') if gig['time'] else 'Time TBD'}
 
-        # Create the file in Google Drive
-        file_metadata = {
-            'name': f"Bandsheet Receipt {datetime.now(PT_TZ).strftime('%Y-%m-%d %H:%M')}",
-            'mimeType': 'text/plain',
-            'parents': [DRIVE_FOLDER_ID]
-        }
+Published to Bandsheet: {timestamp}
+"""
 
-        from googleapiclient.http import MediaFileUpload
-        media = MediaFileUpload(
-            filename=None,
-            mimetype='text/plain',
-            chunksize=256*1024,
-            resumable=True
-        )
+                # Create the file in this venue's folder
+                file_metadata = {
+                    'name': f"Bandsheet Receipt {datetime.now(PT_TZ).strftime('%Y-%m-%d %H:%M')}",
+                    'mimeType': 'text/plain',
+                    'parents': [folder_id]
+                }
 
-        # For plain text, we'll create via simple API
-        file_metadata = {
-            'name': f"Bandsheet Receipt {datetime.now(PT_TZ).strftime('%Y-%m-%d %H:%M')}",
-            'mimeType': 'text/plain',
-            'parents': [DRIVE_FOLDER_ID]
-        }
+                from io import BytesIO
+                file_result = drive_service.files().create(
+                    body=file_metadata,
+                    media_body=BytesIO(receipt_text.encode('utf-8')),
+                    fields='id, webViewLink'
+                ).execute()
 
-        # Use multipart upload with the text content
-        from io import BytesIO
-        file_stream = BytesIO(receipt_text.encode('utf-8'))
-        media = media = None
+                print(f"[OK] Receipt created for {folder_name}")
 
-        file_result = drive_service.files().create(
-            body=file_metadata,
-            media_body=BytesIO(receipt_text.encode('utf-8')),
-            fields='id, webViewLink'
-        ).execute()
-
-        print(f"[OK] Receipt created: {file_result.get('webViewLink')}")
+            except Exception as e:
+                print(f"[WARN] Failed to create receipt for {folder_name}: {e}")
 
     except Exception as e:
-        print(f"[WARN] Failed to create receipt: {e}")
+        print(f"[ERROR] Failed to authenticate with Drive: {e}")
 
 
 def main():
@@ -306,8 +295,8 @@ def main():
     print(f"  {len(bandsheet['free_weekends'])} open weekend days")
     print(f"  Updated: {bandsheet['updated']}")
 
-    # Create receipt in Drive
-    create_drive_receipt(bandsheet)
+    # Create receipts in venue folders
+    create_drive_receipt(gigs)
 
 
 if __name__ == "__main__":
