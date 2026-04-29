@@ -1,0 +1,332 @@
+#!/usr/bin/env python3
+"""
+Generate Neon Blonde Band Sheet from Google Docs Master Schedule.
+Reads Master Schedule Google Doc and Calendar API for member availability.
+Outputs as JSON in existing bandsheet format.
+"""
+
+import json
+import sys
+import os
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
+from pathlib import Path
+import re
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.exceptions import RefreshError
+from googleapiclient.discovery import build
+
+# Configuration
+CALENDAR_ID = "neonblondevc@gmail.com"
+PT_TZ = ZoneInfo("America/Los_Angeles")
+
+# IMPORTANT: Set this to your Master Schedule Google Doc ID
+# You can find it in the URL: https://docs.google.com/document/d/{DOC_ID}/edit
+MASTER_SCHEDULE_DOC_ID = os.getenv("MASTER_SCHEDULE_DOC_ID", "")
+
+SCOPES = [
+    "https://www.googleapis.com/auth/calendar.readonly",
+    "https://www.googleapis.com/auth/documents.readonly"
+]
+
+CONFIG_DIR = Path.home() / ".neon_blonde"
+CREDENTIALS_FILE = CONFIG_DIR / "credentials.json"
+TOKEN_FILE = CONFIG_DIR / "token.json"
+
+
+def get_credentials():
+    """Load or refresh OAuth credentials."""
+    creds = None
+    
+    # Try loading from token file
+    if TOKEN_FILE.exists():
+        creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+    
+    # Refresh if needed
+    if creds and creds.expired and creds.refresh_token:
+        try:
+            creds.refresh(Request())
+            with open(TOKEN_FILE, 'w') as token:
+                token.write(creds.to_json())
+        except RefreshError:
+            creds = None
+    
+    # If no valid credentials, try setup_auth.py path
+    if not creds and CREDENTIALS_FILE.exists():
+        flow = InstalledAppFlow.from_client_secrets_file(
+            CREDENTIALS_FILE,
+            SCOPES
+        )
+        creds = flow.run_local_server(port=0)
+        with open(TOKEN_FILE, 'w') as token:
+            token.write(creds.to_json())
+    
+    if not creds:
+        print("❌ No valid credentials found.")
+        print(f"   Please run: python3 setup_auth.py")
+        sys.exit(1)
+    
+    return creds
+
+
+def get_master_schedule_text(service):
+    """Fetch Master Schedule doc content via Google Docs API."""
+    if not MASTER_SCHEDULE_DOC_ID:
+        print("❌ MASTER_SCHEDULE_DOC_ID not set.")
+        print("   Set via environment variable: export MASTER_SCHEDULE_DOC_ID='your-doc-id'")
+        sys.exit(1)
+    
+    try:
+        doc = service.documents().get(documentId=MASTER_SCHEDULE_DOC_ID).execute()
+        text = ""
+        
+        # Extract text from document body
+        for element in doc.get("body", {}).get("content", []):
+            if "paragraph" in element:
+                for run in element["paragraph"].get("elements", []):
+                    if "textRun" in run:
+                        text += run["textRun"].get("content", "")
+        
+        return text
+    except Exception as e:
+        print(f"❌ Error fetching Master Schedule: {e}")
+        sys.exit(1)
+
+
+def get_calendar_events(service):
+    """Fetch all member 'out' events from calendar (all-day events with name in title)."""
+    try:
+        now = datetime.now(PT_TZ).isoformat()
+        
+        events_result = service.events().list(
+            calendarId=CALENDAR_ID,
+            timeMin=now,
+            maxResults=250,
+            singleEvents=True,
+            orderBy='startTime'
+        ).execute()
+        
+        return events_result.get('items', [])
+    except Exception as e:
+        print(f"❌ Error fetching calendar: {e}")
+        sys.exit(1)
+
+
+def parse_master_schedule(text):
+    """Parse Master Schedule text into gigs with dates and times."""
+    gigs = []
+    
+    # Pattern: "M/D/YYYY at H:MM (AM/PM) | Venue, Location"
+    # Example: "5/10/2026 at 03:00 PM | Leashless, Ventura"
+    pattern = r'(\d{1,2})/(\d{1,2})/(\d{4})\s+at\s+(\d{1,2}):(\d{2})\s+(AM|PM)\s*\|\s*(.+)'
+    
+    for match in re.finditer(pattern, text, re.IGNORECASE):
+        month, day, year, hour, minute, ampm, venue = match.groups()
+        
+        # Parse date
+        try:
+            date_obj = datetime.strptime(f"{month}/{day}/{year}", "%m/%d/%Y").date()
+        except ValueError:
+            continue
+        
+        # Parse time
+        hour_int = int(hour)
+        minute_int = int(minute)
+        if ampm.upper() == "PM" and hour_int != 12:
+            hour_int += 12
+        elif ampm.upper() == "AM" and hour_int == 12:
+            hour_int = 0
+        
+        time_obj = datetime.strptime(f"{hour_int:02d}:{minute_int:02d}", "%H:%M").time()
+        
+        # Clean venue
+        venue_clean = venue.strip()
+        
+        gigs.append({
+            "date": date_obj,
+            "time": time_obj,
+            "venue": venue_clean,
+        })
+    
+    return sorted(gigs, key=lambda x: (x["date"], x["time"]))
+
+
+def parse_member_availability(events):
+    """Extract member availability from calendar all-day events."""
+    member_outs = {}
+    
+    member_out_keywords = {"out", "unavailable", "absent", "blocked", "vacation", "off", "birthday"}
+    
+    today = datetime.now(PT_TZ).date()
+    
+    for event in events:
+        try:
+            title = event.get("summary", "").lower()
+            is_member_out = any(keyword in title for keyword in member_out_keywords)
+            
+            if not is_member_out:
+                continue
+            
+            # Check if all-day event
+            start_prop = event.get("start", {})
+            end_prop = event.get("end", {})
+            
+            if "date" not in start_prop:
+                continue  # Skip if not all-day
+            
+            start_date = datetime.strptime(start_prop["date"], "%Y-%m-%d").date()
+            
+            # End date is exclusive for all-day events
+            if "date" in end_prop:
+                end_date = datetime.strptime(end_prop["date"], "%Y-%m-%d").date()
+                end_date = end_date - timedelta(days=1)  # Make it inclusive
+            else:
+                end_date = start_date
+            
+            # Skip if entirely in the past
+            if end_date < today:
+                continue
+            
+            # Extract member name (first word of title)
+            member_name = event.get("summary", "Unknown").split()[0]
+            
+            if member_name not in member_outs:
+                member_outs[member_name] = []
+            
+            member_outs[member_name].append((start_date, end_date))
+        
+        except Exception as e:
+            print(f"Warning: Failed to parse event '{event.get('summary')}': {e}", file=sys.stderr)
+            continue
+    
+    return member_outs
+
+
+def format_time_12h(time_obj):
+    """Convert time object to 12-hour format."""
+    if not time_obj:
+        return None
+    formatted = time_obj.strftime("%I:%M%p").lstrip("0")
+    return formatted.replace("AM", "AM").replace("PM", "PM")
+
+
+def generate_bandsheet(gigs, member_outs):
+    """Generate Band Sheet sections in existing format."""
+    today = datetime.now(PT_TZ).date()
+    
+    # THIS WEEK - next 7 days with events
+    this_week_entries = []
+    week_end = today + timedelta(days=7)
+    
+    for gig in gigs:
+        if today <= gig["date"] < week_end:
+            day_name = gig["date"].strftime("%A").upper()
+            time_str = f"@ {format_time_12h(gig['time'])}" if gig["time"] else ""
+            venue = gig["venue"].strip()
+            entry = f"{day_name} {time_str} {venue}".strip()
+            this_week_entries.append(entry)
+    
+    for member_name, date_ranges in member_outs.items():
+        for start_date, end_date in date_ranges:
+            if today <= start_date < week_end:
+                entry = f"{member_name.upper()} OUT {start_date.strftime('%A').upper()}"
+                this_week_entries.append(entry)
+    
+    # BOOKED GIGS - all gigs with full details
+    booked_gigs = []
+    for gig in gigs:
+        day_abbr = gig["date"].strftime("%a").upper()
+        date_str = gig["date"].strftime("%-m-%-d-%Y")
+        time_str = f"@ {format_time_12h(gig['time'])}" if gig["time"] else ""
+        venue = gig["venue"].strip()
+        entry = f"{day_abbr} {date_str} {time_str} — {venue}".replace("  ", " ").strip()
+        booked_gigs.append(entry)
+    
+    # MEMBERS OUT - all member unavailability
+    members_out = []
+    for member_name, date_ranges in sorted(member_outs.items()):
+        for start_date, end_date in sorted(date_ranges):
+            day_abbr_start = start_date.strftime("%a").upper()
+            date_str_start = start_date.strftime("%-m-%-d-%Y")
+            
+            if (end_date - start_date).days <= 0:
+                # Single day
+                entry = f"- {member_name}: {day_abbr_start} {date_str_start}"
+            else:
+                # Range
+                day_abbr_end = end_date.strftime("%a").upper()
+                date_str_end = end_date.strftime("%-m-%-d-%Y")
+                entry = f"- {member_name}: {day_abbr_start} {date_str_start} to {day_abbr_end} {date_str_end}"
+            members_out.append(entry)
+    
+    # FULLY FREE WEEKENDS
+    free_weekends = []
+    check_date = today
+    end_of_july = today.replace(month=7, day=31)
+    
+    for _ in range((end_of_july - today).days + 1):
+        if check_date.weekday() == 5:  # Saturday
+            sat_date = check_date
+            sun_date = check_date + timedelta(days=1)
+            
+            # Check if both days are free of gigs
+            sat_gigs = [g for g in gigs if g["date"] == sat_date]
+            sun_gigs = [g for g in gigs if g["date"] == sun_date]
+            
+            # Check if any members are out
+            sat_member_out = any(
+                start <= sat_date <= end for _, dates in member_outs.items() for start, end in dates
+            )
+            sun_member_out = any(
+                start <= sun_date <= end for _, dates in member_outs.items() for start, end in dates
+            )
+            
+            if not sat_gigs and not sun_gigs and not sat_member_out and not sun_member_out:
+                entry = f"- SAT-SUN {sat_date.strftime('%B %-d')}-{sun_date.strftime('%-d')}"
+                free_weekends.append(entry)
+        
+        check_date += timedelta(days=1)
+    
+    return {
+        "updated": datetime.now(PT_TZ).strftime("%B %d, %Y @ %-I:%M %p PT"),
+        "this_week": this_week_entries,
+        "booked_gigs": booked_gigs,
+        "members_out": members_out,
+        "free_weekends": free_weekends,
+    }
+
+
+def main():
+    """Main execution."""
+    creds = get_credentials()
+    
+    # Build services
+    docs_service = build('docs', 'v1', credentials=creds)
+    calendar_service = build('calendar', 'v3', credentials=creds)
+    
+    # Fetch Master Schedule and parse gigs
+    schedule_text = get_master_schedule_text(docs_service)
+    gigs = parse_master_schedule(schedule_text)
+    
+    # Fetch calendar events and parse member availability
+    calendar_events = get_calendar_events(calendar_service)
+    member_outs = parse_member_availability(calendar_events)
+    
+    # Generate bandsheet
+    bandsheet = generate_bandsheet(gigs, member_outs)
+    
+    # Write JSON
+    with open("bandsheet-data.json", "w") as f:
+        json.dump(bandsheet, f, indent=2)
+    
+    print("✓ Band Sheet generated successfully")
+    print(f"  - {len(bandsheet['booked_gigs'])} gigs")
+    print(f"  - {len(bandsheet['members_out'])} member outs")
+    print(f"  - {len(bandsheet['free_weekends'])} free weekends")
+
+
+if __name__ == "__main__":
+    main()
