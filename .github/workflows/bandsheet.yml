@@ -14,10 +14,11 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
+      - run: echo '${{ secrets.GOOGLE_TOKEN_JSON }}' > token.json
       - run: python3 generate_bandsheet.py
       - run: |
           git config user.name "Bot"
           git config user.email "bot@neon.com"
-          git add bandsheet-data.json
+          git add bandsheet-data.json docs/bandsheet-data.json
           git commit -m "Update Band Sheet" || true
           git push || true
