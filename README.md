@@ -1,5 +1,7 @@
 # Neon Blonde Band Sheet
 
+![Neon Blonde](neon-portrait-1.jpeg)
+
 **Real-time gig schedule for Neon Blonde, the 6-piece 80s cover band.**
 
 The bandsheet is a live, auto-updating interface that pulls gig data from the band's master schedule and presents it with a dark-mode 80s aesthetic. Built with React and deployed via GitHub Pages.
@@ -51,29 +53,35 @@ NeonBlonde-Bandsheet/
 
 ## Setup
 
-OAuth credentials are stored as Base64-encoded secrets in GitHub Actions. The workflow:
-1. Decodes the token from `NEON_BLONDE_OAUTH_TOKEN_B64`
-2. Authenticates to Google Calendar
-3. Fetches events from the master schedule
-4. Generates JSON and deploys
+The bandsheet uses OAuth 2.0 to authenticate with Google Calendar API. The automation flow is entirely handled by GitHub Actions—no manual credential management required.
 
-Credentials are protected via `.gitignore`; they never commit to the repo.
+**Credentials workflow:**
+- `generate_bandsheet.py` reads Base64-encoded OAuth credentials from `credentials.json`
+- GitHub Actions keeps credentials secure via encrypted secrets
+- The Python script pulls gig events and generates fresh JSON daily
+- No credentials are stored or exposed in the deployed site
+
+**To run locally:**
+```bash
+python3 generate_bandsheet.py
+```
+
+This regenerates `docs/bandsheet-data.json` and updates the live site on next GitHub Pages sync.
 
 ## Customization
 
-The tweaks panel (tweaks-panel.jsx) allows runtime adjustments:
-- Color schemes
-- Font sizing
-- Layout preferences
-- Display filters
+The **Tweaks Panel** in the React app allows runtime adjustments:
+- Font weight and sizing
+- Neon color intensity and scheme
+- Layout spacing and typography
+- Display modes (compact, expanded, dark/light)
+
+Tweaks are applied client-side and don't persist across page reloads (by design—the band can quickly experiment without committing changes).
 
 ## Notes
 
-- All dates/times are in the band's local timezone
-- Completed gigs remain in the log for historical reference
-- The workflow runs daily; manual updates via GitHub Actions "Run workflow" button
-- GitHub Pages rebuilds automatically after each push
+- The custom Overseer font is served from `docs/fonts/` and supports 4 weights (regular, italic, bold, bold italic)
+- GitHub Actions runs on UTC schedule; times may differ from band's local timezone
+- The React app is delivered as a single 17KB HTML file for fast loading and simple deployment
+- `bandsheet-data.json` is the single source of truth for gig data on the live site
 
----
-
-*Neon Blonde musical direction by Mike Miller • Bandsheet automation by Claude*
