@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Blonde - The Band Sheet</title>
+    <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+    <style>
+        @font-face {
+            font-family: 'Overseer';
+            src: url('fonts/Overseer.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Overseer';
+            src: url('fonts/Overseer Bold.otf') format('opentype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Dark mode palette */
+            --bg-primary: #0a0e27;
+            --bg-secondary: #1a1f3a;
+            --bg-tertiary: #252d47;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a8a8a8;
+            --accent-primary: #ff006e;
+            --accent-secondary: #00d9ff;
+            --accent-tertiary: #ffff00;
+            --border-color: #2a2d32;
+            --gradient-1: linear-gradient(135deg, #1a1f3a 0%, #252d47 100%);
+            --gradient-accent: linear-gradient(135deg, #ff006e 0%, #ff3388 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 32px 24px;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--gradient-1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 0, 110, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+        }
+
+        .next-gig-panel {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.15), rgba(255, 0, 110, 0.05));
+            border: 3px solid var(--accent-primary);
+            border-radius: 8px;
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 140px;
+        }
+
+        .next-gig-label {
+            font-size: 64px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 12px;
+            animation: pulse 0.8s infinite;
+            line-height: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.95);
+            }
+        }
+
+        .next-gig-text {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        @media (min-width: 1200px) {
+            .next-gig-text {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .next-gig-panel {
+                flex: auto;
+                min-height: auto;
+            }
+
+            .next-gig-label {
+                font-size: 48px;
+            }
+
+            .next-gig-text {
+                font-size: 24px;
+            }
+        }
+
+        .logo {
+            font-family: 'Overseer', sans-serif;
+            font-size: 80px;
+            font-weight: normal;
+            letter-spacing: 0px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            margin-bottom: 0px;
+            line-height: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .logo {
+                font-size: 120px;
+            }
+        }
+
+        .title {
+            font-family: 'Overseer', sans-serif;
+            font-size: 48px;
+            font-weight: normal;
+            color: var(--accent-secondary);
+            margin-bottom: 0px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .title {
+                font-size: 64px;
+            }
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .updated {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .sections-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: var(--gradient-1);
+            border: 1px solid var(--border-color);
+            border-top: 2px solid var(--accent-tertiary);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+            opacity: 0.3;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .entries {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section:has(#this-week) .entries {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .section:has(#free-weekends) .entries {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .section:has(#this-week) .entries,
+            .section:has(#free-weekends) .entries {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .entry {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 8px;
+            font-size: 20px;
+            transition: all 0.2s ease;
+        }
+
+        .entry:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .entry-label {
+            display: none;
+        }
+
+        .entry-text {
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .entry.this-week .entry-text {
+            color: var(--accent-secondary);
+        }
+
+        .entry.gig .entry-text {
+            color: var(--accent-tertiary);
+        }
+
+        .entry.member-out .entry-text {
+            color: var(--accent-primary);
+        }
+
+        .entry.weekend .entry-text {
+            color: #88ff00;
+        }
+
+        .empty-state {
+            padding: 16px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .month-group {
+            margin-top: 16px;
+        }
+
+        .month-header {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin: 16px 0 12px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent-primary);
+        }
+
+        .month-group:first-child .month-header {
+            margin-top: 0;
+        }
+
+        .footer {
+            background: var(--gradient-1);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .footer-main {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .footer-meta {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .footer-meta strong {
+            color: var(--accent-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">Neon Blonde</div>
+                <h1 class="title">Band Sheet</h1>
+                <div class="updated" id="updated">Updated: Loading...</div>
+            </div>
+            <div class="next-gig-panel">
+                <div class="next-gig-label">Next Gig</div>
+                <div class="next-gig-text" id="next-gig-info">Loading...</div>
+            </div>
+        </div>
+
+        <div class="sections-grid">
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">📅</div>
+                    <h2 class="section-title">This Week</h2>
+                </div>
+                <div class="entries" id="this-week">Loading...</div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🎤</div>
+                    <h2 class="section-title">Booked Gigs</h2>
+                </div>
+                <div class="entries" id="booked-gigs">Loading...</div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">⚠️</div>
+                    <h2 class="section-title">Members Out</h2>
+                </div>
+                <div class="entries" id="members-out">Loading...</div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-icon">🌙</div>
+                    <h2 class="section-title">Weekend Days Open</h2>
+                </div>
+                <div class="entries" id="free-weekends">Loading...</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p class="footer-main">Got questions? Reach out.</p>
+            <p class="footer-meta">Last updated: <strong id="last-updated">Loading...</strong></p>
+        </div>
+    </div>
+
+    <script>
+        function addEntries(containerId, entries, entryClass) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (entries.length > 0) {
+                entries.forEach(text => {
+                    const div = document.createElement('div');
+                    div.className = `entry ${entryClass}`;
+                    
+                    const label = document.createElement('div');
+                    label.className = 'entry-label';
+                    label.textContent = entryClass.replace('-', ' ');
+                    
+                    const textDiv = document.createElement('div');
+                    textDiv.className = 'entry-text';
+                    textDiv.textContent = text;
+                    
+                    div.appendChild(label);
+                    div.appendChild(textDiv);
+                    container.appendChild(div);
+                });
+            } else {
+                const div = document.createElement('div');
+                div.className = 'empty-state';
+                div.textContent = '(Nothing scheduled)';
+                container.appendChild(div);
+            }
+        }
+
+        function addWeekendsByMonth(containerId, entries) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (!entries.length) {
+                const div = document.createElement('div');
+                div.className = 'empty-state';
+                div.textContent = '(No weekends open)';
+                container.appendChild(div);
+                return;
+            }
+
+            let currentMonth = null;
+            let monthGroup = null;
+
+            entries.forEach(text => {
+                const parts = text.replace('- ', '').split(' ');
+                const month = parts[1];
+                
+                if (month !== currentMonth) {
+                    currentMonth = month;
+                    monthGroup = document.createElement('div');
+                    monthGroup.className = 'month-group';
+                    
+                    const header = document.createElement('div');
+                    header.className = 'month-header';
+                    header.textContent = month.toUpperCase();
+                    monthGroup.appendChild(header);
+                    container.appendChild(monthGroup);
+                }
+
+                const div = document.createElement('div');
+                div.className = 'entry weekend';
+                
+                const textDiv = document.createElement('div');
+                textDiv.className = 'entry-text';
+                textDiv.textContent = text;
+                div.appendChild(textDiv);
+                monthGroup.appendChild(div);
+            });
+        }
+
+        fetch('bandsheet-data.json')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('updated').textContent = `Updated: ${data.updated}`;
+                document.getElementById('last-updated').textContent = new Date().toLocaleString();
+
+                // Extract next gig
+                if (data.booked_gigs && data.booked_gigs.length > 0) {
+                    document.getElementById('next-gig-info').textContent = data.booked_gigs[0];
+                } else {
+                    document.getElementById('next-gig-info').textContent = 'No upcoming gigs';
+                }
+
+                addEntries('this-week', data.this_week, 'this-week');
+                addEntries('booked-gigs', data.booked_gigs, 'gig');
+                addEntries('members-out', data.members_out, 'member-out');
+                addWeekendsByMonth('free-weekends', data.free_weekends);
+            })
+            .catch(error => {
+                console.error('Error loading band sheet:', error);
+                const container = document.querySelector('.container');
+                const errorDiv = document.createElement('div');
+                errorDiv.style.cssText = 'color: var(--accent-primary); text-align: center; padding: 40px;';
+                errorDiv.textContent = 'Error loading band sheet data. Make sure bandsheet-data.json is in the same directory.';
+                container.appendChild(errorDiv);
+            });
+    </script>
+</body>
+</html>
