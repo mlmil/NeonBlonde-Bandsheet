@@ -214,23 +214,23 @@ def check_folders(drive, bandsheet_gigs):
     all_clear = []
 
     for gig_line in bandsheet_gigs:
-        # Extract venue name from line like "FRI 5-16-2026 @8PM — The Sewer, Ventura"
-        if " — " in gig_line:
-            venue_part = gig_line.split(" — ")[1]
-            venue_name = venue_part.split(",")[0].strip()
-        else:
-            venue_name = gig_line
-
-        date_part = gig_line.split(" — ")[0] if " — " in gig_line else ""
+        # Extract venue and date from line like "FRI 5-16-2026 @8PM — The Sewer, Ventura"
+        if " — " not in gig_line:
+            continue
+        venue_part = gig_line.split(" — ")[1]
+        venue_name = venue_part.split(",")[0].strip()
+        date_part = gig_line.split(" ")[1]  # e.g. "5-16-2026"
 
         try:
-            safe = venue_name.replace("'", "\\'")
-            q = f"name contains '{safe}' and '{DRIVE_FOLDER_ID}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+            m, d, y = date_part.split("-")
+            folder_name = f"{venue_name} - {int(m)}/{int(d)}/{y}"
+            safe = folder_name.replace("'", "\\'")
+            q = f"name = '{safe}' and '{DRIVE_FOLDER_ID}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
             results = drive.files().list(q=q, spaces="drive", fields="files(id, name)", pageSize=1).execute()
             folders = results.get("files", [])
 
             if not folders:
-                action_needed.append(f"  NO FOLDER: {venue_name} ({date_part})")
+                action_needed.append(f"  NO FOLDER: {folder_name}")
                 continue
 
             folder_id = folders[0]["id"]

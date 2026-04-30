@@ -225,13 +225,13 @@ def create_drive_receipt(gigs, members_out):
             venue = gig['venue']
             gig_date = gig['date']
 
-            # Search by title (contains) to handle naming variations and missing dates
-            safe_title = gig['title'].replace("'", "\\'")
-            folder_name = gig['title']
+            # Exact match on "Venue - M/D/YYYY" format (matches Google Apps Script convention)
+            folder_name = f"{venue} - {gig_date.month}/{gig_date.day}/{gig_date.year}"
+            safe_name = folder_name.replace("'", "\\'")
 
             try:
                 # Search for the folder
-                query = f"name contains '{safe_title}' and '{DRIVE_FOLDER_ID}' in parents and trashed = false"
+                query = f"name = '{safe_name}' and '{DRIVE_FOLDER_ID}' in parents and trashed = false"
                 results = drive_service.files().list(
                     q=query,
                     spaces='drive',
