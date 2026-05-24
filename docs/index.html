@@ -481,17 +481,46 @@
             background: var(--gradient-1);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 24px;
+            padding: 28px 24px;
             text-align: center;
             color: var(--text-secondary);
             font-size: 13px;
         }
 
         .footer-main {
+            align-items: center;
             color: var(--text-primary);
-            font-weight: 500;
-            margin-bottom: 12px;
-            font-size: 18px;
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 30px;
+            font-weight: 800;
+            gap: 8px 14px;
+            justify-content: center;
+            line-height: 1.15;
+            margin-bottom: 16px;
+        }
+
+        .footer-link {
+            color: var(--accent-secondary);
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        .footer-label {
+            text-transform: uppercase;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-tertiary);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .footer-main {
+                align-items: center;
+                flex-direction: column;
+                font-size: 23px;
+            }
         }
 
         .footer-meta {
@@ -555,7 +584,14 @@
         </div>
 
         <div class="footer">
-            <p class="footer-main">Got questions? Reach out.</p>
+            <p class="footer-main">
+                <span class="footer-label">Bookings:</span>
+                <a class="footer-link" href="mailto:neonblondevc@gmail.com">neonblondevc@gmail.com</a>
+            </p>
+            <p class="footer-main">
+                <span class="footer-label">Got questions?</span>
+                <a class="footer-link" href="tel:+18184262710">(818) 426-2710</a>
+            </p>
             <p class="footer-meta">Last updated: <strong id="last-updated">Loading...</strong></p>
         </div>
     </div>

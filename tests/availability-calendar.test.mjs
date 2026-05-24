@@ -7,6 +7,8 @@ const scriptMatch = html.match(/<script>([\s\S]*?)fetch\('bandsheet-data\.json'\
 assert.ok(scriptMatch, 'Could not find inline bandsheet script before data fetch');
 assert.ok(!html.includes('id="free-weekends"'), 'Availability text list should not render under the calendar');
 assert.ok(!html.includes("addWeekendsByMonth('free-weekends'"), 'Availability text renderer should not be called');
+assert.ok(html.includes('href="mailto:neonblondevc@gmail.com"'), 'Bookings email should be a mail link');
+assert.ok(html.includes('href="tel:+18184262710"'), 'Questions phone number should be a tap-to-call link');
 
 const context = {
   console,
