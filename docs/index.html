@@ -337,6 +337,74 @@
             color: #88ff00;
         }
 
+        .availability-calendar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .calendar-month {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(136, 255, 0, 0.2);
+            border-radius: 8px;
+            padding: 14px;
+        }
+
+        .calendar-title {
+            color: #88ff00;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .calendar-weekdays,
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 4px;
+        }
+
+        .calendar-weekday {
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            color: rgba(224, 224, 224, 0.32);
+            display: flex;
+            font-size: 12px;
+            font-weight: 600;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .calendar-day.is-open {
+            background: rgba(136, 255, 0, 0.14);
+            border-color: rgba(136, 255, 0, 0.75);
+            box-shadow: 0 0 12px rgba(136, 255, 0, 0.16);
+            color: #88ff00;
+        }
+
+        .calendar-day.is-empty {
+            border-color: transparent;
+        }
+
+        .availability-note {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: -8px 0 16px;
+        }
+
         .empty-state {
             padding: 16px;
             text-align: center;
@@ -435,6 +503,8 @@
                     <div class="section-icon">🌙</div>
                     <h2 class="section-title">Weekend Days Open</h2>
                 </div>
+                <div class="availability-note">Green dates are currently open for booking.</div>
+                <div class="availability-calendar" id="availability-calendar"></div>
                 <div class="entries" id="free-weekends">Loading...</div>
             </div>
         </div>
@@ -517,6 +587,105 @@
             });
         }
 
+        const MONTH_NAMES = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        function parseOpenWeekendEntry(text) {
+            const match = text.match(/^-\s+[A-Z]{3}\s+([A-Za-z]+)\s+(\d{1,2})$/);
+            if (!match) {
+                return null;
+            }
+
+            const monthIndex = MONTH_NAMES.indexOf(match[1]);
+            if (monthIndex === -1) {
+                return null;
+            }
+
+            return {
+                monthIndex,
+                monthName: match[1],
+                day: Number(match[2]),
+            };
+        }
+
+        function buildAvailabilityMonths(entries, year = new Date().getFullYear()) {
+            const monthsByIndex = new Map();
+
+            entries
+                .map(parseOpenWeekendEntry)
+                .filter(Boolean)
+                .forEach(({ monthIndex, monthName, day }) => {
+                    if (!monthsByIndex.has(monthIndex)) {
+                        monthsByIndex.set(monthIndex, {
+                            label: monthName,
+                            firstWeekday: new Date(year, monthIndex, 1).getDay(),
+                            daysInMonth: new Date(year, monthIndex + 1, 0).getDate(),
+                            openDays: new Set(),
+                        });
+                    }
+
+                    monthsByIndex.get(monthIndex).openDays.add(day);
+                });
+
+            return Array.from(monthsByIndex.values());
+        }
+
+        function renderAvailabilityCalendar(entries) {
+            const container = document.getElementById('availability-calendar');
+            container.innerHTML = '';
+
+            const months = buildAvailabilityMonths(entries);
+            if (!months.length) {
+                return;
+            }
+
+            months.forEach(month => {
+                const monthEl = document.createElement('div');
+                monthEl.className = 'calendar-month';
+
+                const title = document.createElement('div');
+                title.className = 'calendar-title';
+                title.textContent = month.label;
+                monthEl.appendChild(title);
+
+                const weekdays = document.createElement('div');
+                weekdays.className = 'calendar-weekdays';
+                ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(day => {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = 'calendar-weekday';
+                    dayEl.textContent = day;
+                    weekdays.appendChild(dayEl);
+                });
+                monthEl.appendChild(weekdays);
+
+                const grid = document.createElement('div');
+                grid.className = 'calendar-grid';
+
+                for (let i = 0; i < month.firstWeekday; i += 1) {
+                    const empty = document.createElement('div');
+                    empty.className = 'calendar-day is-empty';
+                    grid.appendChild(empty);
+                }
+
+                for (let day = 1; day <= month.daysInMonth; day += 1) {
+                    const dayEl = document.createElement('div');
+                    dayEl.className = month.openDays.has(day)
+                        ? 'calendar-day is-open'
+                        : 'calendar-day';
+                    dayEl.textContent = day;
+                    if (month.openDays.has(day)) {
+                        dayEl.setAttribute('aria-label', `${month.label} ${day} is open`);
+                    }
+                    grid.appendChild(dayEl);
+                }
+
+                monthEl.appendChild(grid);
+                container.appendChild(monthEl);
+            });
+        }
+
         fetch('bandsheet-data.json')
             .then(response => response.json())
             .then(data => {
@@ -533,6 +702,7 @@
                 addEntries('this-week', data.this_week, 'this-week');
                 addEntries('booked-gigs', data.booked_gigs, 'gig');
                 addEntries('members-out', data.members_out, 'member-out');
+                renderAvailabilityCalendar(data.free_weekends);
                 addWeekendsByMonth('free-weekends', data.free_weekends);
             })
             .catch(error => {
