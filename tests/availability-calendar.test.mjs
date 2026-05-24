@@ -3,12 +3,13 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 
 const html = fs.readFileSync(new URL('../docs/index.html', import.meta.url), 'utf8');
-const scriptMatch = html.match(/<script>([\s\S]*?)fetch\('bandsheet-data\.json'\)/);
+const scriptMatch = html.match(/<script>([\s\S]*?)fetch\(`bandsheet-data\.json\?v=\$\{Date\.now\(\)\}`/);
 assert.ok(scriptMatch, 'Could not find inline bandsheet script before data fetch');
 assert.ok(!html.includes('id="free-weekends"'), 'Availability text list should not render under the calendar');
 assert.ok(!html.includes("addWeekendsByMonth('free-weekends'"), 'Availability text renderer should not be called');
 assert.ok(html.includes('href="mailto:neonblondevc@gmail.com"'), 'Bookings email should be a mail link');
 assert.ok(html.includes('href="tel:+18184262710"'), 'Questions phone number should be a tap-to-call link');
+assert.ok(html.includes("fetch(`bandsheet-data.json?v=${Date.now()}`"), 'Bandsheet data fetch should bypass stale cached JSON');
 
 const context = {
   console,

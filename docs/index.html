@@ -856,7 +856,7 @@
             });
         }
 
-        fetch('bandsheet-data.json')
+        fetch(`bandsheet-data.json?v=${Date.now()}`, { cache: 'no-store' })
             .then(response => response.json())
             .then(data => {
                 document.getElementById('updated').textContent = `Updated: ${data.updated}`;
