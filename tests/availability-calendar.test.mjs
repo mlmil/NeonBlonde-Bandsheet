@@ -27,6 +27,7 @@ vm.createContext(context);
 vm.runInContext(scriptMatch[1], context);
 
 assert.equal(typeof context.buildAvailabilityMonths, 'function');
+assert.equal(typeof context.buildMemberOutGroups, 'function');
 
 const months = context.buildAvailabilityMonths([
   '- FRI July 24',
@@ -39,3 +40,20 @@ assert.equal(JSON.stringify(Array.from(months[0].openDays)), JSON.stringify([24,
 assert.equal(months[0].firstWeekday, 3);
 assert.equal(months[0].daysInMonth, 31);
 assert.equal(JSON.stringify(Array.from(months[1].openDays)), JSON.stringify([2]));
+
+const memberGroups = context.buildMemberOutGroups([
+  '- Alfred: SAT 5-23-2026',
+  '- Alfred: SAT 6-27-2026 to THU 7-2-2026',
+  '- Dave: THU 6-18-2026',
+]);
+
+assert.equal(JSON.stringify(memberGroups), JSON.stringify([
+  {
+    name: 'Alfred',
+    dates: ['Sat May 23', 'Sat Jun 27 - Thu Jul 2'],
+  },
+  {
+    name: 'Dave',
+    dates: ['Thu Jun 18'],
+  },
+]));

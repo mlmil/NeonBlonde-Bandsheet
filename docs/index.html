@@ -337,6 +337,51 @@
             color: #88ff00;
         }
 
+        .members-out-note {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: -8px 0 16px;
+        }
+
+        .members-out-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .member-card {
+            background: rgba(255, 0, 110, 0.05);
+            border: 1px solid rgba(255, 0, 110, 0.24);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .member-name {
+            color: var(--accent-primary);
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .member-date-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .member-date-chip {
+            background: rgba(255, 0, 110, 0.12);
+            border: 1px solid rgba(255, 0, 110, 0.52);
+            border-radius: 6px;
+            color: var(--accent-primary);
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.25;
+            padding: 8px 10px;
+        }
+
         .availability-calendar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -495,7 +540,8 @@
                     <div class="section-icon">⚠️</div>
                     <h2 class="section-title">Members Out</h2>
                 </div>
-                <div class="entries" id="members-out">Loading...</div>
+                <div class="members-out-note">Pink dates mean that member is unavailable.</div>
+                <div class="members-out-grid" id="members-out">Loading...</div>
             </div>
 
             <div class="section">
@@ -584,6 +630,95 @@
                 textDiv.textContent = text;
                 div.appendChild(textDiv);
                 monthGroup.appendChild(div);
+            });
+        }
+
+        function parseMemberOutEntry(text) {
+            const match = text.match(/^-\s+([^:]+):\s+(.+)$/);
+            if (!match) {
+                return null;
+            }
+
+            return {
+                name: match[1],
+                dateText: match[2],
+            };
+        }
+
+        function formatShortDate(dateText) {
+            const match = dateText.match(/^([A-Z]{3})\s+(\d{1,2})-(\d{1,2})-(\d{4})$/);
+            if (!match) {
+                return dateText;
+            }
+
+            const dayName = match[1].charAt(0) + match[1].slice(1).toLowerCase();
+            const monthName = MONTH_NAMES[Number(match[2]) - 1].slice(0, 3);
+            return `${dayName} ${monthName} ${Number(match[3])}`;
+        }
+
+        function formatMemberOutDate(dateText) {
+            const rangeParts = dateText.split(' to ');
+            if (rangeParts.length === 2) {
+                return `${formatShortDate(rangeParts[0])} - ${formatShortDate(rangeParts[1])}`;
+            }
+
+            return formatShortDate(dateText);
+        }
+
+        function buildMemberOutGroups(entries) {
+            const groupsByName = new Map();
+
+            entries
+                .map(parseMemberOutEntry)
+                .filter(Boolean)
+                .forEach(({ name, dateText }) => {
+                    if (!groupsByName.has(name)) {
+                        groupsByName.set(name, {
+                            name,
+                            dates: [],
+                        });
+                    }
+
+                    groupsByName.get(name).dates.push(formatMemberOutDate(dateText));
+                });
+
+            return Array.from(groupsByName.values());
+        }
+
+        function renderMembersOut(entries) {
+            const container = document.getElementById('members-out');
+            container.innerHTML = '';
+
+            const groups = buildMemberOutGroups(entries);
+            if (!groups.length) {
+                const div = document.createElement('div');
+                div.className = 'empty-state';
+                div.textContent = '(No members out)';
+                container.appendChild(div);
+                return;
+            }
+
+            groups.forEach(group => {
+                const card = document.createElement('div');
+                card.className = 'member-card';
+
+                const name = document.createElement('div');
+                name.className = 'member-name';
+                name.textContent = group.name;
+                card.appendChild(name);
+
+                const chips = document.createElement('div');
+                chips.className = 'member-date-chips';
+
+                group.dates.forEach(dateText => {
+                    const chip = document.createElement('div');
+                    chip.className = 'member-date-chip';
+                    chip.textContent = dateText;
+                    chips.appendChild(chip);
+                });
+
+                card.appendChild(chips);
+                container.appendChild(card);
             });
         }
 
@@ -701,7 +836,7 @@
 
                 addEntries('this-week', data.this_week, 'this-week');
                 addEntries('booked-gigs', data.booked_gigs, 'gig');
-                addEntries('members-out', data.members_out, 'member-out');
+                renderMembersOut(data.members_out);
                 renderAvailabilityCalendar(data.free_weekends);
                 addWeekendsByMonth('free-weekends', data.free_weekends);
             })
