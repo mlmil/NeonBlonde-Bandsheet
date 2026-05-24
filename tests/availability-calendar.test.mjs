@@ -5,6 +5,8 @@ import vm from 'node:vm';
 const html = fs.readFileSync(new URL('../docs/index.html', import.meta.url), 'utf8');
 const scriptMatch = html.match(/<script>([\s\S]*?)fetch\('bandsheet-data\.json'\)/);
 assert.ok(scriptMatch, 'Could not find inline bandsheet script before data fetch');
+assert.ok(!html.includes('id="free-weekends"'), 'Availability text list should not render under the calendar');
+assert.ok(!html.includes("addWeekendsByMonth('free-weekends'"), 'Availability text renderer should not be called');
 
 const context = {
   console,
