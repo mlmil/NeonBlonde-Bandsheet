@@ -14,7 +14,6 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -r requirements.txt
-      - run: echo '${{ secrets.NEON_TOKEN_JSON }}' > token.json
       - run: python3 generate_bandsheet.py
       - run: |
           git config user.name "Bot"

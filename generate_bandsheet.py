@@ -13,10 +13,6 @@ import requests
 from icalendar import Calendar
 from datetime import datetime, timedelta, date, time
 from zoneinfo import ZoneInfo
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
 
 # Load config
 with open("config.json") as f:
@@ -25,8 +21,6 @@ with open("config.json") as f:
 CALENDAR_ID = CONFIG.get("calendar_id", "neonblondevc@gmail.com")
 ICS_URL = f"https://calendar.google.com/calendar/ical/{CALENDAR_ID.replace('@', '%40')}/public/basic.ics"
 PT_TZ = ZoneInfo("America/Los_Angeles")
-DRIVE_FOLDER_ID = CONFIG.get("drive_folder_id")
-CREDENTIALS_FILE = CONFIG.get("credentials_file", "credentials.json")
 
 MEMBER_OUT_KEYWORDS = {"out", "unavailable", "absent", "blocked", "vacation", "off"}
 
@@ -193,111 +187,6 @@ def generate_bandsheet(gigs, member_outs):
         "free_weekends": weekend_days_open,
     }
 
-
-def create_drive_receipt(gigs, members_out):
-    """Create a receipt document in each venue folder showing when it was published."""
-    if not DRIVE_FOLDER_ID:
-        print("[SKIP] No DRIVE_FOLDER_ID in config — skipping receipt creation")
-        return
-
-    SCOPES = ["https://www.googleapis.com/auth/drive"]
-    TOKEN_FILE = CONFIG.get("token_file", "token.json")
-
-    try:
-        creds = None
-        if os.path.exists(TOKEN_FILE):
-            creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(CREDENTIALS_FILE, SCOPES)
-                creds = flow.run_local_server(port=0)
-            with open(TOKEN_FILE, "w") as f:
-                f.write(creds.to_json())
-        print("[INFO] Using OAuth2 credentials")
-
-        drive_service = build("drive", "v3", credentials=creds)
-        timestamp = datetime.now(PT_TZ).strftime("%Y-%m-%d %H:%M:%S PT")
-
-        # For each gig, find the matching venue folder and create a receipt
-        for gig in gigs:
-            venue = gig['venue']
-            gig_date = gig['date']
-
-            # Exact match on "Venue - M/D/YYYY" format (matches Google Apps Script convention)
-            folder_name = f"{venue} - {gig_date.month}/{gig_date.day}/{gig_date.year}"
-            safe_name = folder_name.replace("'", "\\'")
-
-            try:
-                # Search for the folder
-                query = f"name = '{safe_name}' and '{DRIVE_FOLDER_ID}' in parents and trashed = false"
-                results = drive_service.files().list(
-                    q=query,
-                    spaces='drive',
-                    fields='files(id, name)',
-                    pageSize=1
-                ).execute()
-
-                folders = results.get('files', [])
-                if not folders:
-                    print(f"[SKIP] Folder not found: {folder_name}")
-                    continue
-
-                folder_id = folders[0]['id']
-
-                # Build full gig list for the receipt
-                all_gigs_lines = []
-                for g in gigs:
-                    marker = ">>> " if g == gig else "    "
-                    g_date = g['date'].strftime('%a %m/%d/%Y')
-                    g_time = g['time'].strftime('@%-I%p') if g['time'] else ''
-                    all_gigs_lines.append(f"{marker}{g_date} {g_time} — {g['venue']}")
-                all_gigs_text = "\n".join(all_gigs_lines)
-
-                members_out_text = "\n".join(members_out) if members_out else "  (none)"
-
-                # Create receipt text for this gig
-                receipt_text = f"""NEON BLONDE - BANDSHEET PUBLICATION RECEIPT
-Generated: {timestamp}
-Bandsheet: https://mlmil.github.io/NeonBlonde-Bandsheet/
-
-THIS GIG (>>> marked below):
-  {gig['title']}
-  {gig_date.strftime('%A, %B %d, %Y')} {gig['time'].strftime('@ %-I:%M %p PT') if gig['time'] else ''}
-
-ALL UPCOMING GIGS AS OF THIS RUN:
-{all_gigs_text}
-
-MEMBERS OUT AS OF THIS RUN:
-{members_out_text}
-"""
-
-                # Create the file in this venue's folder
-                file_metadata = {
-                    'name': f"Bandsheet Receipt {datetime.now(PT_TZ).strftime('%Y-%m-%d %H:%M')}",
-                    'mimeType': 'text/plain',
-                    'parents': [folder_id]
-                }
-
-                from io import BytesIO
-                from googleapiclient.http import MediaIoBaseUpload
-                media = MediaIoBaseUpload(BytesIO(receipt_text.encode('utf-8')), mimetype='text/plain')
-                file_result = drive_service.files().create(
-                    body=file_metadata,
-                    media_body=media,
-                    fields='id, webViewLink'
-                ).execute()
-
-                print(f"[OK] Receipt created for {folder_name}")
-
-            except Exception as e:
-                print(f"[WARN] Failed to create receipt for {folder_name}: {e}")
-
-    except Exception as e:
-        print(f"[ERROR] Failed to authenticate with Drive: {e}")
-
-
 def main():
     print("=" * 60)
     print("NEON BLONDE BAND SHEET GENERATOR")
@@ -324,9 +213,6 @@ def main():
     print(f"  {len(bandsheet['members_out'])} member outs")
     print(f"  {len(bandsheet['free_weekends'])} open weekend days")
     print(f"  Updated: {bandsheet['updated']}")
-
-    # Create receipts in venue folders
-    create_drive_receipt(gigs, bandsheet['members_out'])
 
 
 if __name__ == "__main__":
