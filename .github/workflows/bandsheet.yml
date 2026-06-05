@@ -2,7 +2,7 @@ name: Update Band Sheet
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 14 * * *'
+    - cron: '*/15 * * * *'
 permissions:
   contents: write
 jobs:
