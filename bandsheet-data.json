@@ -1,5 +1,5 @@
 {
-  "updated": "June 16, 2026 @ 12:52 PM PT",
+  "updated": "June 16, 2026 @ 3:18 PM PT",
   "this_week": [
     "DAVE OUT THURSDAY",
     "DAVE OUT SATURDAY"
@@ -7,6 +7,7 @@
   "booked_gigs": [
     "SAT 7-18-2026 @6PM \u2014 Santa Barbara Yacht Club, Santa Barbara",
     "SUN 7-19-2026 @3PM \u2014 Leashless, Ventura",
+    "SAT 7-25-2026 @7PM \u2014 Tony's Pizza, Ventura",
     "FRI 7-31-2026 @6PM \u2014 Parquee 1055, Santa Paula",
     "SAT 8-8-2026 @6PM \u2014 Private Party, Santa Barbara",
     "SUN 8-9-2026 @3PM \u2014 Leashless, Ventura",
@@ -18,11 +19,11 @@
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-10-2026 @9AM \u2014 Club Babaloo, San Bearnadino Correctinal Facility",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
+    "SAT 10-24-2026 @9PM \u2014 Club Babaloo, San Bearnadino Correctinal Facility",
     "SAT 11-28-2026 @6PM \u2014 Leashless, Ventura"
   ],
   "members_out": [
     "- Alfred: SAT 6-27-2026 to THU 7-2-2026",
-    "- Alfred: FRI 7-24-2026 to SUN 7-26-2026",
     "- Alfred: SAT 9-26-2026",
     "- Alfred: WED 10-28-2026 to WED 11-4-2026",
     "- Alfred: FRI 11-13-2026",
@@ -43,6 +44,8 @@
   "free_weekends": [
     "- FRI June 19",
     "- FRI July 17",
+    "- FRI July 24",
+    "- SUN July 26",
     "- SAT August 1",
     "- SUN August 2",
     "- FRI August 7",
@@ -66,7 +69,6 @@
     "- FRI October 16",
     "- SUN October 18",
     "- FRI October 23",
-    "- SAT October 24",
     "- SUN October 25",
     "- FRI November 6",
     "- SAT November 7",
