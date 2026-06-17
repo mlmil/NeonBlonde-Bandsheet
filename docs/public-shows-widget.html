@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neon Blonde Upcoming Shows</title>
+  <style>
+    :root {
+      --nb-bg: #10000c;
+      --nb-card: rgba(22, 0, 18, 0.9);
+      --nb-border: rgba(255, 0, 220, 0.28);
+      --nb-pink: #ff00df;
+      --nb-yellow: #fff100;
+      --nb-white: #f4edf4;
+      --nb-muted: #b9a9b6;
+    }
+
+    html,
+    body {
+      margin: 0;
+      background: var(--nb-bg);
+      color: var(--nb-white);
+      font-family: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .neon-public-shows {
+      padding: 22px 18px 26px;
+      text-align: center;
+    }
+
+    .nb-title {
+      display: inline-block;
+      margin: 0 0 28px;
+      padding: 0 0 8px;
+      border-bottom: 1px solid var(--nb-pink);
+      color: var(--nb-white);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .nb-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap: 14px;
+      max-width: 1080px;
+      margin: 0 auto 38px;
+    }
+
+    .nb-show-card {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      align-items: center;
+      min-height: 80px;
+      gap: 16px;
+      padding: 10px 14px;
+      border: 1px solid var(--nb-border);
+      border-radius: 8px;
+      background: var(--nb-card);
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .nb-logo {
+      display: block;
+      width: 58px;
+      height: 58px;
+      border: 2px solid var(--nb-pink);
+      border-radius: 999px;
+      background: #070007;
+      object-fit: cover;
+    }
+
+    .nb-logo-fallback {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--nb-pink);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .nb-date {
+      color: var(--nb-yellow);
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+
+    .nb-venue {
+      margin-top: 3px;
+      color: var(--nb-muted);
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .nb-meta {
+      margin-top: 2px;
+      color: var(--nb-pink);
+      font-size: 14px;
+      line-height: 1.05;
+    }
+
+    .nb-booking {
+      margin: 0;
+      color: var(--nb-white);
+      font-size: clamp(30px, 5vw, 42px);
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .nb-booking-sub {
+      margin: 6px 0 0;
+      color: var(--nb-white);
+      font-size: 15px;
+      line-height: 1.3;
+    }
+
+    .nb-status {
+      grid-column: 1 / -1;
+      color: var(--nb-muted);
+      font-size: 16px;
+      padding: 18px 0 34px;
+      text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+      .nb-grid {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .neon-public-shows {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .nb-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="neon-public-shows">
+    <h2 class="nb-title">Upcoming Shows</h2>
+    <div class="nb-grid" data-nb-shows>
+      <div class="nb-status">Loading shows...</div>
+    </div>
+    <h3 class="nb-booking" data-nb-booking>Now Booking</h3>
+    <p class="nb-booking-sub">Get on our calendar now. Let us rock your room.</p>
+  </main>
+
+  <script>
+    (function () {
+      var DATA_URL = "https://mlmil.github.io/NeonBlonde-Bandsheet/docs/bandsheet-data.json";
+      var grid = document.querySelector("[data-nb-shows]");
+      var booking = document.querySelector("[data-nb-booking]");
+
+      var venueImages = [
+        ["cruisery", "https://neonblonde.band/wp-content/uploads/2025/05/Cruisery.jpg"],
+        ["fess parker", "https://neonblonde.band/wp-content/uploads/2025/02/Fess_Parker.png"],
+        ["leashless", "https://neonblonde.band/wp-content/uploads/2025/05/Leashless.jpg"],
+        ["m special", "https://neonblonde.band/wp-content/uploads/2025/02/MSpecial.png"],
+        ["ms special", "https://neonblonde.band/wp-content/uploads/2025/02/MSpecial.png"],
+        ["tony", "https://neonblonde.band/wp-content/uploads/2026/04/tonys-pizzaria-logo.png"],
+        ["topa topa", "https://neonblonde.band/wp-content/uploads/2026/04/topa-topa-logo.png"],
+        ["fox wine", "https://neonblonde.band/wp-content/uploads/2026/04/topa-topa-logo.png"],
+        ["santa barbara yacht club", "https://neonblonde.band/wp-content/uploads/2025/06/SB_Yacht_Club.png"],
+        ["private", "https://neonblonde.band/wp-content/uploads/2023/08/Neon_Blonde_Logo.jpg"],
+        ["wedding", "https://neonblonde.band/wp-content/uploads/2023/08/Neon_Blonde_Logo_2.png"]
+      ];
+
+      var hiddenPatterns = [
+        /promo|automation|design session/i,
+        /club babaloo|club bobaloo/i
+      ];
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, function (char) {
+          return {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+          }[char];
+        });
+      }
+
+      function publicBookingLabel(now) {
+        var year = now.getFullYear();
+        var month = now.getMonth();
+        if (month >= 8 && month <= 10) return "Now Booking Winter " + (year + 1);
+        if (month === 11 || month <= 1) return "Now Booking Spring " + year;
+        if (month >= 2 && month <= 4) return "Now Booking Summer " + year;
+        return "Now Booking Fall " + year + "/" + (year + 1);
+      }
+
+      function parseGig(line) {
+        var match = String(line).match(/^[A-Z]{3}\s+(\d{1,2})-(\d{1,2})-(\d{4})\s+@([0-9:]+[AP]M)\s+(?:-|--|\u2013|\u2014|&mdash;)\s+(.+)$/);
+        if (!match) return null;
+        var month = Number(match[1]);
+        var day = Number(match[2]);
+        var year = Number(match[3]);
+        var time = match[4].toLowerCase();
+        var label = match[5].replace(/^[^A-Za-z0-9]+/, "").trim();
+        var pieces = label.split(",");
+        var city = pieces.length > 1 ? pieces.pop().trim() : "";
+        var venue = pieces.join(",").trim() || label;
+        return { month: month, day: day, year: year, time: time, venue: venue, city: city, label: label };
+      }
+
+      function dateLabel(gig) {
+        var date = new Date(gig.year, gig.month - 1, gig.day);
+        return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
+      }
+
+      function imageFor(venue) {
+        var lower = venue.toLowerCase();
+        var hit = venueImages.find(function (entry) {
+          return lower.indexOf(entry[0]) !== -1;
+        });
+        return hit ? hit[1] : "";
+      }
+
+      function cardFor(gig) {
+        var image = imageFor(gig.venue);
+        var logo = image
+          ? '<img class="nb-logo" src="' + image + '" alt="" loading="lazy">'
+          : '<span class="nb-logo nb-logo-fallback">Neon<br>Blonde</span>';
+        var city = gig.city ? " - " + gig.city : "";
+        return [
+          '<div class="nb-show-card">',
+          logo,
+          '<div>',
+          '<div class="nb-date">' + escapeHtml(dateLabel(gig)) + '</div>',
+          '<div class="nb-venue">' + escapeHtml(gig.venue) + '</div>',
+          '<div class="nb-meta">' + escapeHtml(gig.time + city) + '</div>',
+          '</div>',
+          '</div>'
+        ].join("");
+      }
+
+      fetch(DATA_URL, { cache: "no-store" })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Could not load shows");
+          return response.json();
+        })
+        .then(function (data) {
+          var gigs = (data.booked_gigs || [])
+            .filter(function (line) {
+              return !hiddenPatterns.some(function (pattern) { return pattern.test(line); });
+            })
+            .map(parseGig)
+            .filter(Boolean)
+            .slice(0, 8);
+
+          grid.innerHTML = gigs.length
+            ? gigs.map(cardFor).join("")
+            : '<div class="nb-status">No public shows listed right now.</div>';
+          booking.textContent = publicBookingLabel(new Date());
+        })
+        .catch(function () {
+          grid.innerHTML = '<div class="nb-status">Shows are updating. Check back soon.</div>';
+          booking.textContent = publicBookingLabel(new Date());
+        });
+    })();
+  </script>
+</body>
+</html>
