@@ -21,6 +21,8 @@ with open("config.json") as f:
 CALENDAR_ID = CONFIG.get("calendar_id", "neonblondevc@gmail.com")
 ICS_URL = f"https://calendar.google.com/calendar/ical/{CALENDAR_ID.replace('@', '%40')}/public/basic.ics"
 PT_TZ = ZoneInfo("America/Los_Angeles")
+DATA_PATH = "bandsheet-data.json"
+DOCS_DATA_PATH = "docs/bandsheet-data.json"
 
 MEMBER_OUT_KEYWORDS = {"out", "unavailable", "absent", "blocked", "vacation", "off"}
 
@@ -124,6 +126,32 @@ def is_blocked(d, member_outs):
     )
 
 
+def comparable_bandsheet(data):
+    return {key: value for key, value in data.items() if key != "updated"}
+
+
+def load_existing_bandsheet(path):
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+    except json.JSONDecodeError as e:
+        print(f"[WARN] Ignoring invalid existing {path}: {e}")
+        return None
+
+
+def set_updated_timestamp(bandsheet, existing_path):
+    existing = load_existing_bandsheet(existing_path)
+    if existing and comparable_bandsheet(existing) == comparable_bandsheet(bandsheet):
+        bandsheet["updated"] = existing.get("updated", "")
+        print("[OK] Band sheet data unchanged; preserving previous updated timestamp")
+    else:
+        bandsheet["updated"] = datetime.now(PT_TZ).strftime("%B %d, %Y @ %-I:%M %p PT")
+        print("[OK] Band sheet data changed; refreshed updated timestamp")
+    return bandsheet
+
+
 def generate_bandsheet(gigs, member_outs):
     today = datetime.now(PT_TZ).date()
     week_end = today + timedelta(days=7)
@@ -180,12 +208,12 @@ def generate_bandsheet(gigs, member_outs):
         check += timedelta(days=1)
 
     return {
-        "updated": datetime.now(PT_TZ).strftime("%B %d, %Y @ %-I:%M %p PT"),
         "this_week": this_week,
         "booked_gigs": booked_gigs,
         "members_out": members_out,
         "free_weekends": weekend_days_open,
     }
+
 
 def main():
     print("=" * 60)
@@ -197,14 +225,16 @@ def main():
     print(f"[DEBUG] {len(gigs)} gigs, {len(member_outs)} members with outs")
 
     bandsheet = generate_bandsheet(gigs, member_outs)
+    bandsheet = set_updated_timestamp(bandsheet, DATA_PATH)
 
-    with open("bandsheet-data.json", "w") as f:
+    with open(DATA_PATH, "w") as f:
         json.dump(bandsheet, f, indent=2)
-    print("[OK] bandsheet-data.json written")
+        f.write("\n")
+    print(f"[OK] {DATA_PATH} written")
 
     # Copy to docs/ folder for GitHub Pages
     try:
-        shutil.copy("bandsheet-data.json", "docs/bandsheet-data.json")
+        shutil.copy(DATA_PATH, DOCS_DATA_PATH)
         print("[OK] bandsheet-data.json copied to docs/")
     except Exception as e:
         print(f"[WARN] Failed to copy to docs/: {e}")
