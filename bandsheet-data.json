@@ -1,6 +1,5 @@
 {
   "this_week": [
-    "KYLE OUT THURSDAY",
     "DAVE OUT SATURDAY"
   ],
   "booked_gigs": [
@@ -32,13 +31,14 @@
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
     "- Dave: SAT 7-11-2026",
     "- Dave: SAT 10-10-2026",
-    "- Kyle: THU 7-9-2026 to SUN 7-12-2026",
     "- Kyle: FRI 8-21-2026 to SUN 8-23-2026",
     "- Mike: SAT 8-1-2026",
     "- Mike: SAT 10-3-2026",
     "- Mike: SAT 10-24-2026"
   ],
   "free_weekends": [
+    "- FRI July 10",
+    "- SUN July 12",
     "- FRI July 17",
     "- FRI July 24",
     "- SUN July 26",
@@ -81,5 +81,5 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "updated": "July 06, 2026 @ 4:05 AM PT"
+  "updated": "July 10, 2026 @ 1:51 AM PT"
 }
