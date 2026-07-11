@@ -12,12 +12,13 @@
     "SUN 8-9-2026 @3PM \u2014 Leashless, Ventura",
     "FRI 8-14-2026 @8PM \u2014 Unbearable, Santa Barbara",
     "SAT 8-15-2026 @7PM \u2014 Ms Special, Goleta",
+    "FRI 8-28-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 8-29-2026 @6PM \u2014 Private Party, Ojai",
-    "SUN 8-30-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SUN 9-6-2026 @7PM \u2014 Jeffs Wedding, Nipomo",
     "FRI 9-11-2026 @7PM \u2014 Figueroa Mountain, Santa Barbara",
     "SAT 9-12-2026 @4PM \u2014 Fox Wine Company, Fox Wine, Santa Barbara",
+    "SUN 9-13-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
     "FRI 11-13-2026 @7PM \u2014 Validation, Santa Barbara",
@@ -45,9 +46,8 @@
     "- SAT August 1",
     "- FRI August 7",
     "- SUN August 16",
-    "- FRI August 28",
+    "- SUN August 30",
     "- SAT September 5",
-    "- SUN September 13",
     "- FRI September 18",
     "- SUN September 20",
     "- FRI October 2",
@@ -81,5 +81,5 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "updated": "July 10, 2026 @ 1:51 AM PT"
+  "updated": "July 10, 2026 @ 6:10 PM PT"
 }
