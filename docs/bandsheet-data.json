@@ -1,7 +1,8 @@
 {
   "this_week": [
     "FRIDAY @6PM Parquee 1055, Santa Paula",
-    "MIKE OUT SATURDAY"
+    "MIKE OUT SATURDAY",
+    "SUNDAY @7PM Tonys Pizza, Ventura"
   ],
   "booked_gigs": [
     "FRI 7-31-2026 @6PM \u2014 Parquee 1055, Santa Paula",
@@ -37,7 +38,6 @@
     "- Mike: SAT 10-24-2026"
   ],
   "free_weekends": [
-    "- SUN July 26",
     "- SAT August 1",
     "- FRI August 7",
     "- SUN August 16",
@@ -75,5 +75,5 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "updated": "July 26, 2026 @ 12:46 AM PT"
+  "updated": "July 27, 2026 @ 1:55 AM PT"
 }
