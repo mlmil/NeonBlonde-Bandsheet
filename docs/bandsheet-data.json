@@ -12,6 +12,7 @@
     "SUN 8-9-2026 @3PM \u2014 Leashless, Ventura",
     "FRI 8-14-2026 @8PM \u2014 Unbearable, Santa Barbara",
     "SAT 8-15-2026 @7PM \u2014 Ms Special, Goleta",
+    "SUN 8-16-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "FRI 8-28-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 8-29-2026 @6PM \u2014 Private Party, Ojai",
     "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
@@ -41,7 +42,6 @@
   "free_weekends": [
     "- SAT August 1",
     "- FRI August 7",
-    "- SUN August 16",
     "- SUN August 30",
     "- SAT September 5",
     "- FRI September 18",
@@ -76,5 +76,5 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "updated": "July 31, 2026 @ 12:38 AM PT"
+  "updated": "July 31, 2026 @ 3:37 PM PT"
 }
