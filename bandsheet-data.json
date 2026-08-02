@@ -2,7 +2,8 @@
   "this_week": [
     "SUNDAY @7PM Tonys Pizza, Ventura",
     "KYLE OUT TUESDAY",
-    "ALFRED OUT WEDNESDAY"
+    "ALFRED OUT WEDNESDAY",
+    "SATURDAY @6PM Private Party, Santa Barbara"
   ],
   "booked_gigs": [
     "SUN 8-2-2026 @7PM \u2014 Tonys Pizza, Ventura",
@@ -39,7 +40,6 @@
     "- Mike: SAT 10-3-2026"
   ],
   "free_weekends": [
-    "- SAT August 1",
     "- FRI August 7",
     "- SUN August 30",
     "- SAT September 5",
@@ -73,5 +73,5 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "updated": "August 01, 2026 @ 11:46 PM PT"
+  "updated": "August 02, 2026 @ 2:12 AM PT"
 }
