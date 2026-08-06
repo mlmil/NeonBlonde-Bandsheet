@@ -571,6 +571,7 @@
                 </div>
                 <div class="members-out-note">Pink dates mean that member is unavailable.</div>
                 <div class="members-out-grid" id="members-out">Loading...</div>
+                <div class="section" id="cross-band-section" style="display:none"><h2>Cross-band conflicts</h2><div id="cross-band-conflicts"></div></div>
             </div>
 
             <div class="section">
@@ -872,6 +873,7 @@
                 addEntries('this-week', data.this_week, 'this-week');
                 addEntries('booked-gigs', data.booked_gigs, 'gig');
                 renderMembersOut(data.members_out);
+                if (data.cross_band_conflicts && data.cross_band_conflicts.length) { document.getElementById('cross-band-section').style.display = 'block'; addEntries('cross-band-conflicts', data.cross_band_conflicts, 'gig'); }
                 renderAvailabilityCalendar(data.free_weekends);
             })
             .catch(error => {
@@ -885,3 +887,4 @@
     </script>
 </body>
 </html>
+
