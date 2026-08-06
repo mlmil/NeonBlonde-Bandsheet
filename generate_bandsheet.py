@@ -23,6 +23,7 @@ ICS_URL = f"https://calendar.google.com/calendar/ical/{CALENDAR_ID.replace('@', 
 PT_TZ = ZoneInfo("America/Los_Angeles")
 DATA_PATH = "bandsheet-data.json"
 DOCS_DATA_PATH = "docs/bandsheet-data.json"
+SIN_CHONIES_ICAL_URL = os.getenv("SIN_CHONIES_ICAL_URL", "https://calendar.google.com/calendar/ical/4fa4b7d105b67016c021fb6f7feddaffde40f5b734d900a90b2737f4027b3dc9%40group.calendar.google.com/public/basic.ics")
 
 MEMBER_OUT_KEYWORDS = {"out", "unavailable", "absent", "blocked", "vacation", "off"}
 
@@ -75,6 +76,26 @@ def fetch_events():
 
     print(f"[OK] {len(events)} events loaded")
     return events
+
+
+def fetch_cross_band_conflicts(neon_events):
+    """Return Sin Chonies events sharing a date with a Neon Blonde gig."""
+    resp = requests.get(SIN_CHONIES_ICAL_URL, timeout=30)
+    resp.raise_for_status()
+    cal = Calendar.from_ical(resp.content)
+    neon_dates = {e["start_date"] for e in neon_events}
+    today = datetime.now(PT_TZ).date()
+    conflicts = []
+    for component in cal.walk():
+        if component.name != "VEVENT" or not component.get("DTSTART"):
+            continue
+        dt = component.get("DTSTART").dt
+        event_date_value = dt.astimezone(PT_TZ).date() if isinstance(dt, datetime) else dt
+        if event_date_value < today or event_date_value not in neon_dates:
+            continue
+        title = str(component.get("SUMMARY", "Sin Chonies booking")).strip()
+        conflicts.append(f"{event_date_value.strftime('%a %m-%d-%Y').upper()} — Sin Chonies: {title}")
+    return sorted(set(conflicts))
 
 
 def parse_events(events):
@@ -152,7 +173,7 @@ def set_updated_timestamp(bandsheet, existing_path):
     return bandsheet
 
 
-def generate_bandsheet(gigs, member_outs):
+def generate_bandsheet(gigs, member_outs, conflicts):
     today = datetime.now(PT_TZ).date()
     week_end = today + timedelta(days=7)
     year_end = date(today.year, 12, 31)
@@ -212,6 +233,7 @@ def generate_bandsheet(gigs, member_outs):
         "booked_gigs": booked_gigs,
         "members_out": members_out,
         "free_weekends": weekend_days_open,
+        "cross_band_conflicts": conflicts,
     }
 
 
@@ -222,9 +244,12 @@ def main():
 
     events = fetch_events()
     gigs, member_outs = parse_events(events)
+    conflicts = fetch_cross_band_conflicts(events)
+    for conflict in conflicts:
+        print(f"::warning title=Cross-band booking conflict::{conflict}")
     print(f"[DEBUG] {len(gigs)} gigs, {len(member_outs)} members with outs")
 
-    bandsheet = generate_bandsheet(gigs, member_outs)
+    bandsheet = generate_bandsheet(gigs, member_outs, conflicts)
     bandsheet = set_updated_timestamp(bandsheet, DATA_PATH)
 
     with open(DATA_PATH, "w") as f:
@@ -247,3 +272,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
