@@ -70,5 +70,11 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "updated": "August 06, 2026 @ 5:21 AM PT"
+  "cross_band_conflicts": [
+    "FRI 08-21-2026 \u2014 Sin Chonies: The Cruisery",
+    "SAT 09-12-2026 \u2014 Sin Chonies: Azar's",
+    "SAT 09-26-2026 \u2014 Sin Chonies: Garage",
+    "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
+  ],
+  "updated": "August 06, 2026 @ 5:25 PM PT"
 }
