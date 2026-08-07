@@ -10,14 +10,15 @@
     "SAT 8-15-2026 @7PM \u2014 Ms Special, Goleta",
     "SUN 8-16-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "FRI 8-28-2026 @7PM \u2014 Tonys Pizza, Ventura",
-    "SAT 8-29-2026 @6PM \u2014 Private Party, Ojai",
+    "SAT 8-29-2026 @6PM \u2014 Private Party - Ojai, Ojai",
+    "SUN 8-30-2026 @9AM \u2014 TOPA-TOPA COLT ST., VENTURA",
     "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SUN 9-6-2026 @7PM \u2014 Jeffs Wedding, Nipomo",
     "FRI 9-11-2026 @7PM \u2014 Figueroa Mountain, Santa Barbara",
     "SAT 9-12-2026 @4PM \u2014 Fox Wine Company, Fox Wine, Santa Barbara",
     "SUN 9-13-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
-    "SAT 10-3-2026 @9AM \u2014 ",
+    "SAT 10-10-2026 @9AM \u2014 BABALOO",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-24-2026 @8PM \u2014 Private Halloween Gig",
     "FRI 11-13-2026 @7PM \u2014 Validation, Santa Barbara",
@@ -30,18 +31,16 @@
     "- Curtis: FRI 9-18-2026 to TUE 9-22-2026",
     "- Curtis: THU 10-8-2026 to MON 10-12-2026",
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
-    "- Dave: SAT 10-10-2026",
     "- Kyle: FRI 8-21-2026 to SUN 8-23-2026",
     "- Kyle: SAT 9-26-2026",
     "- Mike: SUN 9-20-2026",
-    "- Mike: SAT 10-3-2026",
-    "- Mike: SAT 10-24-2026"
+    "- Mike: SAT 10-3-2026"
   ],
   "free_weekends": [
     "- FRI August 7",
-    "- SUN August 30",
     "- SAT September 5",
     "- FRI October 2",
+    "- SAT October 3",
     "- SUN October 4",
     "- FRI October 16",
     "- SUN October 18",
@@ -76,5 +75,5 @@
     "SAT 09-26-2026 \u2014 Sin Chonies: Garage",
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 06, 2026 @ 5:25 PM PT"
+  "updated": "August 06, 2026 @ 8:31 PM PT"
 }
