@@ -164,12 +164,19 @@ def load_existing_bandsheet(path):
 
 def set_updated_timestamp(bandsheet, existing_path):
     existing = load_existing_bandsheet(existing_path)
-    if existing and comparable_bandsheet(existing) == comparable_bandsheet(bandsheet):
-        bandsheet["updated"] = existing.get("updated", "")
-        print("[OK] Band sheet data unchanged; preserving previous updated timestamp")
+    now = datetime.now(PT_TZ)
+    today_label = now.strftime("%B %d, %Y")
+    previous = existing.get("updated", "") if existing else ""
+
+    # Refresh the displayed date at least once per day, even when the
+    # calendar contents have not changed. This keeps the band sheet's
+    # freshness indicator from becoming permanently stale.
+    if previous.startswith(today_label) and existing and comparable_bandsheet(existing) == comparable_bandsheet(bandsheet):
+        bandsheet["updated"] = previous
+        print("[OK] Band sheet data unchanged; preserving today's timestamp")
     else:
-        bandsheet["updated"] = datetime.now(PT_TZ).strftime("%B %d, %Y @ %-I:%M %p PT")
-        print("[OK] Band sheet data changed; refreshed updated timestamp")
+        bandsheet["updated"] = now.strftime("%B %d, %Y @ %-I:%M %p PT")
+        print("[OK] Refreshed daily updated timestamp")
     return bandsheet
 
 
@@ -272,4 +279,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
