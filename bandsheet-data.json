@@ -13,11 +13,14 @@
     "SAT 9-12-2026 @4PM \u2014 Fox Wine Company, Fox Wine, Santa Barbara",
     "SUN 9-13-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
+    "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
     "SAT 10-10-2026 @9AM \u2014 BABALOO",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-24-2026 @8PM \u2014 Private Halloween Gig",
+    "SAT 11-7-2026 @7PM \u2014 Parquee 1055, Santa Paula",
     "FRI 11-13-2026 @7PM \u2014 Validation, Santa Barbara",
-    "SAT 11-28-2026 @6PM \u2014 Leashless, Ventura"
+    "SAT 11-28-2026 @6PM \u2014 Leashless, Ventura",
+    "SAT 12-5-2026 @7PM \u2014 Parquee 1055, Santa Paula"
   ],
   "members_out": [
     "- Alfred: WED 9-23-2026 to MON 9-28-2026",
@@ -28,19 +31,16 @@
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
     "- Kyle: FRI 8-21-2026 to SUN 8-23-2026",
     "- Kyle: SAT 9-26-2026",
-    "- Mike: SUN 9-20-2026 to TUE 9-22-2026",
-    "- Mike: SAT 10-3-2026"
+    "- Mike: SUN 9-20-2026 to TUE 9-22-2026"
   ],
   "free_weekends": [
     "- FRI October 2",
-    "- SAT October 3",
     "- SUN October 4",
     "- FRI October 16",
     "- SUN October 18",
     "- FRI October 23",
     "- SUN October 25",
     "- FRI November 6",
-    "- SAT November 7",
     "- SUN November 8",
     "- SAT November 14",
     "- SUN November 15",
@@ -50,7 +50,6 @@
     "- FRI November 27",
     "- SUN November 29",
     "- FRI December 4",
-    "- SAT December 5",
     "- SUN December 6",
     "- FRI December 11",
     "- SAT December 12",
@@ -67,5 +66,5 @@
     "SAT 09-26-2026 \u2014 Sin Chonies: Garage",
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 18, 2026 @ 12:42 AM PT"
+  "updated": "August 18, 2026 @ 12:41 PM PT"
 }
