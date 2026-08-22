@@ -1,6 +1,6 @@
 {
   "this_week": [
-    "KYLE OUT FRIDAY"
+    "FRIDAY @7PM Tonys Pizza, Ventura"
   ],
   "booked_gigs": [
     "FRI 8-28-2026 @7PM \u2014 Tonys Pizza, Ventura",
@@ -29,11 +29,12 @@
     "- Curtis: FRI 9-18-2026 to TUE 9-22-2026",
     "- Curtis: THU 10-8-2026 to MON 10-12-2026",
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
-    "- Kyle: FRI 8-21-2026 to SUN 8-23-2026",
     "- Kyle: SAT 9-26-2026",
     "- Mike: SUN 9-20-2026 to TUE 9-22-2026"
   ],
   "free_weekends": [
+    "- SAT August 22",
+    "- SUN August 23",
     "- FRI October 2",
     "- SUN October 4",
     "- FRI October 16",
@@ -62,9 +63,8 @@
     "- SUN December 27"
   ],
   "cross_band_conflicts": [
-    "FRI 08-21-2026 \u2014 Sin Chonies: The Cruisery",
     "SAT 09-26-2026 \u2014 Sin Chonies: Garage",
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 21, 2026 @ 12:01 AM PT"
+  "updated": "August 22, 2026 @ 12:00 AM PT"
 }
