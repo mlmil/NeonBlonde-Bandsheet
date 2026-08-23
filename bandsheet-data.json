@@ -1,6 +1,7 @@
 {
   "this_week": [
-    "FRIDAY @7PM Tonys Pizza, Ventura"
+    "FRIDAY @7PM Tonys Pizza, Ventura",
+    "SATURDAY @6PM Private Party - Ojai, Ojai"
   ],
   "booked_gigs": [
     "FRI 8-28-2026 @7PM \u2014 Tonys Pizza, Ventura",
@@ -33,7 +34,6 @@
     "- Mike: SUN 9-20-2026 to TUE 9-22-2026"
   ],
   "free_weekends": [
-    "- SAT August 22",
     "- SUN August 23",
     "- FRI October 2",
     "- SUN October 4",
@@ -65,5 +65,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 22, 2026 @ 8:53 PM PT"
+  "updated": "August 23, 2026 @ 12:37 AM PT"
 }
