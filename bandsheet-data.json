@@ -28,6 +28,7 @@
     "- Alfred: WED 9-23-2026 to MON 9-28-2026",
     "- Alfred: SAT 9-26-2026",
     "- Alfred: WED 10-28-2026 to WED 11-4-2026",
+    "- Alfred: FRI 12-18-2026 to SUN 12-20-2026",
     "- Curtis: FRI 9-18-2026 to TUE 9-22-2026",
     "- Curtis: THU 10-8-2026 to MON 10-12-2026",
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
@@ -55,9 +56,6 @@
     "- FRI December 11",
     "- SAT December 12",
     "- SUN December 13",
-    "- FRI December 18",
-    "- SAT December 19",
-    "- SUN December 20",
     "- FRI December 25",
     "- SAT December 26",
     "- SUN December 27"
@@ -65,5 +63,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 25, 2026 @ 12:09 AM PT"
+  "updated": "August 25, 2026 @ 11:13 AM PT"
 }
