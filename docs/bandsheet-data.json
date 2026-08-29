@@ -1,11 +1,10 @@
 {
   "this_week": [
-    "FRIDAY @7PM Tonys Pizza, Ventura",
     "SATURDAY @6PM Private Party - Ojai, Ojai",
-    "SUNDAY @2PM TOPA-TOPA COLT ST., VENTURA"
+    "SUNDAY @2PM TOPA-TOPA COLT ST., VENTURA",
+    "FRIDAY @9PM Harrys, Pismo Beach"
   ],
   "booked_gigs": [
-    "FRI 8-28-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 8-29-2026 @6PM \u2014 Private Party - Ojai, Ojai",
     "SUN 8-30-2026 @2PM \u2014 TOPA-TOPA COLT ST., VENTURA",
     "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
@@ -64,5 +63,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 28, 2026 @ 4:26 AM PT"
+  "updated": "August 29, 2026 @ 3:21 AM PT"
 }
