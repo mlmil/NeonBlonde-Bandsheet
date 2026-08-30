@@ -1,11 +1,10 @@
 {
   "this_week": [
-    "SATURDAY @6PM Private Party - Ojai, Ojai",
     "SUNDAY @2PM TOPA-TOPA COLT ST., VENTURA",
-    "FRIDAY @9PM Harrys, Pismo Beach"
+    "FRIDAY @9PM Harrys, Pismo Beach",
+    "SATURDAY @9PM Harrys, Pismo Beach"
   ],
   "booked_gigs": [
-    "SAT 8-29-2026 @6PM \u2014 Private Party - Ojai, Ojai",
     "SUN 8-30-2026 @2PM \u2014 TOPA-TOPA COLT ST., VENTURA",
     "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SAT 9-5-2026 @9PM \u2014 Harrys, Pismo Beach",
@@ -34,10 +33,10 @@
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
     "- Curtout: WED 9-9-2026",
     "- Kyle: SAT 9-26-2026",
+    "- Kyle: FRI 10-2-2026",
     "- Mike: SUN 9-20-2026 to TUE 9-22-2026"
   ],
   "free_weekends": [
-    "- FRI October 2",
     "- SUN October 4",
     "- SUN October 18",
     "- FRI October 23",
@@ -63,5 +62,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 29, 2026 @ 3:21 AM PT"
+  "updated": "August 30, 2026 @ 12:29 AM PT"
 }
