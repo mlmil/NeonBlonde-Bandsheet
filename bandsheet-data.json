@@ -1,11 +1,10 @@
 {
   "this_week": [
-    "SUNDAY @2PM TOPA-TOPA COLT ST., VENTURA",
     "FRIDAY @9PM Harrys, Pismo Beach",
-    "SATURDAY @9PM Harrys, Pismo Beach"
+    "SATURDAY @9PM Harrys, Pismo Beach",
+    "SUNDAY @7PM Jeffs Wedding, Nipomo"
   ],
   "booked_gigs": [
-    "SUN 8-30-2026 @2PM \u2014 TOPA-TOPA COLT ST., VENTURA",
     "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SAT 9-5-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SUN 9-6-2026 @7PM \u2014 Jeffs Wedding, Nipomo",
@@ -62,5 +61,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "August 30, 2026 @ 12:29 AM PT"
+  "updated": "August 31, 2026 @ 12:26 AM PT"
 }
