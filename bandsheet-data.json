@@ -20,6 +20,7 @@
     "SAT 11-7-2026 @7PM \u2014 Parquee 1055, Santa Paula",
     "FRI 11-13-2026 @7PM \u2014 Validation, Santa Barbara",
     "SAT 11-28-2026 @6PM \u2014 Leashless, Ventura",
+    "FRI 12-4-2026 @8PM \u2014 Party@Chads SB",
     "SAT 12-5-2026 @7PM \u2014 Parquee 1055, Santa Paula"
   ],
   "members_out": [
@@ -49,7 +50,6 @@
     "- SUN November 22",
     "- FRI November 27",
     "- SUN November 29",
-    "- FRI December 4",
     "- SUN December 6",
     "- FRI December 11",
     "- SAT December 12",
@@ -61,5 +61,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "September 01, 2026 @ 4:29 PM PT"
+  "updated": "September 01, 2026 @ 11:17 PM PT"
 }
