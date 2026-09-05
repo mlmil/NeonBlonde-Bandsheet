@@ -1,12 +1,11 @@
 {
   "this_week": [
-    "FRIDAY @9PM Harrys, Pismo Beach",
     "SATURDAY @9PM Harrys, Pismo Beach",
     "SUNDAY @7PM Jeffs Wedding, Nipomo",
-    "CURTOUT OUT WEDNESDAY"
+    "CURTOUT OUT WEDNESDAY",
+    "FRIDAY @7PM Figueroa Mountain, Santa Barbara"
   ],
   "booked_gigs": [
-    "FRI 9-4-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SAT 9-5-2026 @9PM \u2014 Harrys, Pismo Beach",
     "SUN 9-6-2026 @7PM \u2014 Jeffs Wedding, Nipomo",
     "FRI 9-11-2026 @7PM \u2014 Figueroa Mountain, Santa Barbara",
@@ -63,5 +62,5 @@
   "cross_band_conflicts": [
     "SAT 10-10-2026 \u2014 Sin Chonies: Private Party"
   ],
-  "updated": "September 04, 2026 @ 4:36 AM PT"
+  "updated": "September 05, 2026 @ 2:16 AM PT"
 }
