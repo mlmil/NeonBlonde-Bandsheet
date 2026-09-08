@@ -1,6 +1,5 @@
 {
   "this_week": [
-    "CURTOUT OUT WEDNESDAY",
     "FRIDAY @7PM Figueroa Mountain, Santa Barbara",
     "SATURDAY @4PM Fox Wine Company, Fox Wine, Santa Barbara",
     "SUNDAY @7PM Tonys Pizza, Ventura"
@@ -25,10 +24,8 @@
     "- Alfred: SAT 9-26-2026",
     "- Alfred: WED 10-28-2026 to WED 11-4-2026",
     "- Alfred: FRI 12-18-2026 to SUN 12-20-2026",
-    "- Curtis: FRI 9-18-2026 to TUE 9-22-2026",
     "- Curtis: THU 10-8-2026 to MON 10-12-2026",
     "- Curtis: MON 10-26-2026 to WED 10-28-2026",
-    "- Curtout: WED 9-9-2026",
     "- Kyle: SUN 9-20-2026",
     "- Kyle: SAT 9-26-2026",
     "- Kyle: FRI 10-2-2026",
@@ -36,6 +33,7 @@
     "- Mike: SUN 9-20-2026 to TUE 9-22-2026"
   ],
   "free_weekends": [
+    "- FRI September 18",
     "- SUN October 18",
     "- FRI October 23",
     "- SUN October 25",
@@ -56,8 +54,6 @@
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "cross_band_conflicts": [
-    "FRI 09-18-2026 \u2014 Sin Chonies: Straightforward practice 630-930"
-  ],
-  "updated": "September 07, 2026 @ 10:56 AM PT"
+  "cross_band_conflicts": [],
+  "updated": "September 07, 2026 @ 11:29 PM PT"
 }
