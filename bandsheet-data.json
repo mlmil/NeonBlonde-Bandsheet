@@ -1,10 +1,9 @@
 {
   "this_week": [
-    "SATURDAY @4PM Fox Wine Company, Fox Wine, Santa Barbara",
-    "SUNDAY @7PM Tonys Pizza, Ventura"
+    "SUNDAY @7PM Tonys Pizza, Ventura",
+    "SATURDAY @6PM Leashless, Ventura"
   ],
   "booked_gigs": [
-    "SAT 9-12-2026 @4PM \u2014 Fox Wine Company, Fox Wine, Santa Barbara",
     "SUN 9-13-2026 @7PM \u2014 Tonys Pizza, Ventura",
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
@@ -54,5 +53,5 @@
     "- SUN December 27"
   ],
   "cross_band_conflicts": [],
-  "updated": "September 12, 2026 @ 2:23 AM PT"
+  "updated": "September 13, 2026 @ 4:27 AM PT"
 }
