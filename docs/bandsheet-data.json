@@ -7,7 +7,6 @@
   "booked_gigs": [
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
-    "FRI 10-16-2026 @6PM \u2014 Fox Wine",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-24-2026 @8PM \u2014 Private Halloween Gig",
     "SAT 11-7-2026 @7PM \u2014 Parquee 1055, Santa Paula",
@@ -25,13 +24,15 @@
     "- Kyle: SAT 9-26-2026",
     "- Kyle: FRI 10-2-2026",
     "- Kyle: SUN 10-4-2026",
-    "- Mike: SUN 9-20-2026 to TUE 9-22-2026"
+    "- Mike: SUN 9-20-2026 to TUE 9-22-2026",
+    "- Mike: SUN 10-25-2026"
   ],
   "free_weekends": [
     "- FRI September 18",
     "- FRI October 9",
     "- SAT October 10",
     "- SUN October 11",
+    "- FRI October 16",
     "- SUN October 18",
     "- FRI October 23",
     "- SUN October 25",
@@ -53,5 +54,5 @@
     "- SUN December 27"
   ],
   "cross_band_conflicts": [],
-  "updated": "September 15, 2026 @ 3:21 AM PT"
+  "updated": "September 15, 2026 @ 5:42 PM PT"
 }
