@@ -2,7 +2,8 @@
   "this_week": [
     "SATURDAY @6PM Leashless, Ventura",
     "MIKE OUT SUNDAY",
-    "KYLE OUT SUNDAY"
+    "KYLE OUT SUNDAY",
+    "ALFRED OUT WEDNESDAY"
   ],
   "booked_gigs": [
     "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
@@ -13,7 +14,8 @@
     "FRI 11-13-2026 @7PM \u2014 Validation, Santa Barbara",
     "SAT 11-28-2026 @6PM \u2014 Leashless, Ventura",
     "FRI 12-4-2026 @8PM \u2014 Party@Chads SB",
-    "SAT 12-5-2026 @7PM \u2014 Parquee 1055, Santa Paula"
+    "SAT 12-5-2026 @7PM \u2014 Parquee 1055, Santa Paula",
+    "SUN 12-6-2026 @2PM \u2014 Private Party, santa barbara"
   ],
   "members_out": [
     "- Alfred: WED 9-23-2026 to MON 9-28-2026",
@@ -45,7 +47,6 @@
     "- SUN November 22",
     "- FRI November 27",
     "- SUN November 29",
-    "- SUN December 6",
     "- FRI December 11",
     "- SAT December 12",
     "- SUN December 13",
@@ -54,5 +55,5 @@
     "- SUN December 27"
   ],
   "cross_band_conflicts": [],
-  "updated": "September 16, 2026 @ 10:10 PM PT"
+  "updated": "September 17, 2026 @ 3:01 AM PT"
 }
