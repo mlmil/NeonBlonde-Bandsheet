@@ -1,8 +1,8 @@
 {
   "this_week": [
     "SATURDAY @6PM Leashless, Ventura",
-    "MIKE OUT SUNDAY",
     "KYLE OUT SUNDAY",
+    "MIKE OUT SUNDAY",
     "ALFRED OUT WEDNESDAY"
   ],
   "booked_gigs": [
@@ -26,6 +26,7 @@
     "- Kyle: SAT 9-26-2026",
     "- Kyle: FRI 10-2-2026",
     "- Kyle: SUN 10-4-2026",
+    "- Matt: SAT 11-7-2026",
     "- Mike: SUN 9-20-2026 to TUE 9-22-2026",
     "- Mike: SUN 10-25-2026"
   ],
@@ -55,5 +56,5 @@
     "- SUN December 27"
   ],
   "cross_band_conflicts": [],
-  "updated": "September 17, 2026 @ 12:03 PM PT"
+  "updated": "September 17, 2026 @ 10:03 PM PT"
 }
