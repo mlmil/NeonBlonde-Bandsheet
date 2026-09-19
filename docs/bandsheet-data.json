@@ -1,8 +1,8 @@
 {
   "this_week": [
     "SATURDAY @6PM Leashless, Ventura",
-    "MIKE OUT SUNDAY",
     "KYLE OUT SUNDAY",
+    "MIKE OUT SUNDAY",
     "ALFRED OUT WEDNESDAY"
   ],
   "booked_gigs": [
@@ -33,7 +33,6 @@
     "- Mike: SUN 10-25-2026"
   ],
   "free_weekends": [
-    "- FRI September 18",
     "- FRI October 9",
     "- SAT October 10",
     "- SUN October 11",
@@ -58,5 +57,5 @@
   "cross_band_conflicts": [
     "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters"
   ],
-  "updated": "September 18, 2026 @ 10:08 PM PT"
+  "updated": "September 19, 2026 @ 2:33 AM PT"
 }
