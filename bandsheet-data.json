@@ -1,8 +1,8 @@
 {
   "this_week": [
     "SATURDAY @6PM Leashless, Ventura",
-    "MIKE OUT SUNDAY",
     "KYLE OUT SUNDAY",
+    "MIKE OUT SUNDAY",
     "ALFRED OUT WEDNESDAY"
   ],
   "booked_gigs": [
@@ -12,6 +12,7 @@
     "SAT 10-24-2026 @8PM \u2014 Private Halloween Gig",
     "SAT 11-7-2026 @7PM \u2014 Parquee 1055, Santa Paula",
     "FRI 11-13-2026 @7PM \u2014 Validation, Santa Barbara",
+    "FRI 11-20-2026 @7PM \u2014 Figueroa Mountain, Santa Barbara",
     "SAT 11-21-2026 @8PM \u2014 Ms Special Santa Barbara",
     "SAT 11-28-2026 @6PM \u2014 Leashless, Ventura",
     "FRI 12-4-2026 @8PM \u2014 Party@Chads SB",
@@ -44,7 +45,6 @@
     "- SUN November 8",
     "- SAT November 14",
     "- SUN November 15",
-    "- FRI November 20",
     "- SUN November 22",
     "- FRI November 27",
     "- SUN November 29",
@@ -58,5 +58,5 @@
   "cross_band_conflicts": [
     "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters"
   ],
-  "updated": "September 18, 2026 @ 3:31 PM PT"
+  "updated": "September 18, 2026 @ 5:40 PM PT"
 }
