@@ -1,12 +1,12 @@
 {
   "this_week": [
-    "SATURDAY @6PM Leashless, Ventura",
-    "MIKE OUT SUNDAY",
     "KYLE OUT SUNDAY",
-    "ALFRED OUT WEDNESDAY"
+    "MIKE OUT SUNDAY",
+    "ALFRED OUT WEDNESDAY",
+    "KYLE OUT SATURDAY",
+    "ALFRED OUT SATURDAY"
   ],
   "booked_gigs": [
-    "SAT 9-19-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-24-2026 @8PM \u2014 Private Halloween Gig",
@@ -57,5 +57,5 @@
   "cross_band_conflicts": [
     "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters"
   ],
-  "updated": "September 19, 2026 @ 11:54 PM PT"
+  "updated": "September 20, 2026 @ 5:09 AM PT"
 }
