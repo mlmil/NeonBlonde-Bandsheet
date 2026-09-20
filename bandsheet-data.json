@@ -1,10 +1,10 @@
 {
   "this_week": [
-    "KYLE OUT SUNDAY",
     "MIKE OUT SUNDAY",
+    "KYLE OUT SUNDAY",
     "ALFRED OUT WEDNESDAY",
-    "KYLE OUT SATURDAY",
-    "ALFRED OUT SATURDAY"
+    "ALFRED OUT SATURDAY",
+    "KYLE OUT SATURDAY"
   ],
   "booked_gigs": [
     "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
@@ -57,5 +57,5 @@
   "cross_band_conflicts": [
     "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters"
   ],
-  "updated": "September 20, 2026 @ 5:09 AM PT"
+  "updated": "September 20, 2026 @ 9:09 AM PT"
 }
