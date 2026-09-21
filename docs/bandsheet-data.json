@@ -1,7 +1,5 @@
 {
   "this_week": [
-    "KYLE OUT SUNDAY",
-    "MIKE OUT SUNDAY",
     "ALFRED OUT WEDNESDAY",
     "KYLE OUT SATURDAY",
     "ALFRED OUT SATURDAY"
@@ -24,12 +22,10 @@
     "- Alfred: SAT 9-26-2026",
     "- Alfred: WED 10-28-2026 to WED 11-4-2026",
     "- Alfred: FRI 12-18-2026 to SUN 12-20-2026",
-    "- Kyle: SUN 9-20-2026",
     "- Kyle: SAT 9-26-2026",
     "- Kyle: FRI 10-2-2026",
     "- Kyle: SUN 10-4-2026",
     "- Matt: SAT 11-7-2026",
-    "- Mike: SUN 9-20-2026 to TUE 9-22-2026",
     "- Mike: SUN 10-25-2026"
   ],
   "free_weekends": [
@@ -57,5 +53,5 @@
   "cross_band_conflicts": [
     "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters"
   ],
-  "updated": "September 20, 2026 @ 6:26 PM PT"
+  "updated": "September 21, 2026 @ 6:56 AM PT"
 }
