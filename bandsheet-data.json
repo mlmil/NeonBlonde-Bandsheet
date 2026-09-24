@@ -1,8 +1,7 @@
 {
   "this_week": [
-    "ALFRED OUT WEDNESDAY",
-    "ALFRED OUT SATURDAY",
-    "KYLE OUT SATURDAY"
+    "KYLE OUT SATURDAY",
+    "ALFRED OUT SATURDAY"
   ],
   "booked_gigs": [
     "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
@@ -20,7 +19,6 @@
     "SUN 12-6-2026 @2PM \u2014 Private Party, santa barbara"
   ],
   "members_out": [
-    "- Alfred: WED 9-23-2026 to MON 9-28-2026",
     "- Alfred: SAT 9-26-2026",
     "- Alfred: WED 10-28-2026 to WED 11-4-2026",
     "- Alfred: FRI 12-18-2026 to SUN 12-20-2026",
@@ -31,6 +29,8 @@
     "- Mike: SUN 10-25-2026"
   ],
   "free_weekends": [
+    "- FRI September 25",
+    "- SUN September 27",
     "- FRI October 9",
     "- SAT October 10",
     "- FRI October 16",
@@ -55,5 +55,5 @@
     "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters",
     "SUN 10-25-2026 \u2014 Sin Chonies: Shelly fuz gig"
   ],
-  "updated": "September 23, 2026 @ 11:40 PM PT"
+  "updated": "September 24, 2026 @ 5:15 AM PT"
 }
