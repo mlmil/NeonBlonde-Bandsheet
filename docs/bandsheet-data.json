@@ -6,6 +6,7 @@
   "booked_gigs": [
     "SAT 10-3-2026 @7PM \u2014 Parquee 1055, Santa Paula",
     "SUN 10-11-2026 @7PM \u2014 Tony's Pizza, Ventura",
+    "FRI 10-16-2026 @7PM \u2014 Fox Wine Company, Fox Wine, Santa Barbara",
     "SAT 10-17-2026 @6PM \u2014 Leashless, Ventura",
     "SAT 10-24-2026 @8PM \u2014 Private Halloween Gig",
     "SAT 11-7-2026 @7PM \u2014 Parquee 1055, Santa Paula",
@@ -25,15 +26,13 @@
     "- Kyle: SAT 9-26-2026",
     "- Kyle: FRI 10-2-2026",
     "- Kyle: SUN 10-4-2026",
-    "- Matt: SAT 11-7-2026",
-    "- Mike: SUN 10-25-2026"
+    "- Matt: SAT 11-7-2026"
   ],
   "free_weekends": [
     "- FRI September 25",
     "- SUN September 27",
     "- FRI October 9",
     "- SAT October 10",
-    "- FRI October 16",
     "- SUN October 18",
     "- FRI October 23",
     "- SUN October 25",
@@ -52,8 +51,8 @@
     "- SUN December 27"
   ],
   "cross_band_conflicts": [
-    "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters",
-    "SUN 10-25-2026 \u2014 Sin Chonies: Shelly fuz gig"
+    "FRI 10-16-2026 \u2014 Sin Chonies: Keep open for neon blonde",
+    "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters"
   ],
-  "updated": "September 24, 2026 @ 1:42 PM PT"
+  "updated": "September 25, 2026 @ 12:34 AM PT"
 }
