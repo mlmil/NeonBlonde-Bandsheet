@@ -1,7 +1,8 @@
 {
   "this_week": [
     "SUNDAY @7PM Tony's Pizza, Ventura",
-    "FRIDAY @7PM Fox Wine Company, Fox Wine, Santa Barbara"
+    "FRIDAY @7PM Fox Wine Company, Fox Wine, Santa Barbara",
+    "SATURDAY @6PM Leashless, Ventura"
   ],
   "booked_gigs": [
     "SUN 10-11-2026 @7PM \u2014 Tony's Pizza, Ventura",
@@ -25,7 +26,6 @@
     "- Matt: SAT 11-7-2026"
   ],
   "free_weekends": [
-    "- SAT October 10",
     "- SUN October 18",
     "- FRI October 23",
     "- SUN October 25",
@@ -49,5 +49,5 @@
     "SAT 11-28-2026 \u2014 Sin Chonies: Leashless",
     "WED 11-25-2026 \u2014 Sin Chonies: Tonys"
   ],
-  "updated": "October 10, 2026 @ 4:14 AM PT"
+  "updated": "October 11, 2026 @ 2:01 AM PT"
 }
