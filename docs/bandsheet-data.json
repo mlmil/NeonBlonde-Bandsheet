@@ -22,7 +22,7 @@
     "- Kyle: WED 11-18-2026",
     "- Kyle: FRI 11-27-2026",
     "- Matt: SAT 11-7-2026",
-    "- Mike: MON 12-7-2026 to MON 12-14-2026"
+    "- Mike: SAT 12-12-2026"
   ],
   "free_weekends": [
     "- FRI October 23",
@@ -32,14 +32,11 @@
     "- SUN November 15",
     "- SUN November 22",
     "- SUN November 29",
+    "- SUN December 13",
     "- FRI December 25",
     "- SAT December 26",
     "- SUN December 27"
   ],
-  "cross_band_conflicts": [
-    "SAT 11-21-2026 \u2014 Sin Chonies: Winchesters",
-    "SAT 11-28-2026 \u2014 Sin Chonies: Leashless",
-    "WED 11-25-2026 \u2014 Sin Chonies: Tonys"
-  ],
-  "updated": "October 20, 2026 @ 3:19 AM PT"
+  "cross_band_conflicts": [],
+  "updated": "October 20, 2026 @ 3:41 PM PT"
 }
