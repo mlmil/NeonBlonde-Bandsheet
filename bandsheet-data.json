@@ -1,11 +1,10 @@
 {
   "this_week": [
-    "WEDNESDAY @5PM SIdewalk Concert, Santa Barbara",
     "FRIDAY @9PM Private Party, Santa Barbara",
-    "SATURDAY @4PM Fox Wine Company, Santa Barbara"
+    "SATURDAY @4PM Fox Wine Company, Santa Barbara",
+    "KYLE OUT WEDNESDAY"
   ],
   "booked_gigs": [
-    "WED 11-11-2026 @5PM \u2014 SIdewalk Concert, Santa Barbara",
     "FRI 11-13-2026 @9PM \u2014 Private Party, Santa Barbara",
     "SAT 11-14-2026 @4PM \u2014 Fox Wine Company, Santa Barbara",
     "FRI 11-20-2026 @7PM \u2014 Figueroa Mountain, Santa Barbara",
@@ -36,8 +35,7 @@
   "cross_band_conflicts": [
     "FRI 11-13-2026 \u2014 Sin Chonies: Neon blonde",
     "FRI 11-20-2026 \u2014 Sin Chonies: Neon blonde",
-    "SAT 11-28-2026 \u2014 Sin Chonies: Neon blonde",
-    "WED 11-11-2026 \u2014 Sin Chonies: Neon blonde"
+    "SAT 11-28-2026 \u2014 Sin Chonies: Neon blonde"
   ],
-  "updated": "November 11, 2026 @ 1:03 AM PT"
+  "updated": "November 12, 2026 @ 4:45 AM PT"
 }
